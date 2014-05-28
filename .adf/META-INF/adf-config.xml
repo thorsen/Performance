@@ -21,14 +21,4 @@
       oracle.adf.desktopintegration.controller.impl.ADFcControllerStateManager
     </controller-state-manager-class>
   </adf-desktopintegration-servlet-config>
-  <adf-resourcebundle-config xmlns="http://xmlns.oracle.com/adf/resourcebundle/config">
-    <applicationBundleName>
-      resourcebundles/xliffBundles/PerformanceOverrideBundle
-    </applicationBundleName>
-    <bundleList>
-      <bundleId override="true">
-        es.ramondin.performance.view.resources.performanceBundle
-      </bundleId>
-    </bundleList>
-  </adf-resourcebundle-config>
 </adf-config>
