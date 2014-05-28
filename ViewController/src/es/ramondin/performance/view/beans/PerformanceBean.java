@@ -273,7 +273,7 @@ public class PerformanceBean {
 
     public List getListaCelulasAgrup() {
         FacesContext fctx = FacesContext.getCurrentInstance();
-        ResourceBundle rb = ResourceBundle.getBundle("es.ramondin.performance.view.resources.performanceBundle", fctx.getViewRoot().getLocale());
+        ResourceBundle rb = ResourceBundle.getBundle("es.ramondin.performance.view.resources.ViewControllerBundle", fctx.getViewRoot().getLocale());
 
         OperationBinding operation = this.getBindings().getOperationBinding("hayExcepciones");
 
