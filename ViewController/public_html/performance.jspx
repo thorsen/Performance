@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1" xmlns:f="http://java.sun.com/jsf/core" xmlns:af="http://xmlns.oracle.com/adf/faces/rich"
+          xmlns:Grafico="/GraficoLib" xmlns:c="http://java.sun.com/jsp/jstl/core">
+  <c:set var="viewcontrollerBundle" value="#{adfBundle['es.ramondin.performance.view.resources.ViewControllerBundle']}"/>
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+  <f:view>
+    <af:document id="d1" title="Performance">
+      <af:messages id="m1"/>
+      <af:form id="f1">
+        <af:panelFormLayout id="pfl1">
+          <af:inputNumberSpinbox label="#{viewcontrollerBundle.ANO_DE_RUPTURA}" id="ins1" minimum="1900" maximum="#{PerformanceBean.anoRupturaMax}"
+                                 value="#{PerformanceBean.anoRuptura}" autoSubmit="true"/>
+          <af:inputNumberSpinbox label="#{viewcontrollerBundle.ANOS_DE_HISTORICO}" id="ins2" minimum="1" maximum="10" value="#{PerformanceBean.anosHistorico}"/>
+          <af:selectBooleanCheckbox text="#{viewcontrollerBundle.VISUALIZAR_A_MES_VENCIDO}" id="sbc2" binding="#{PerformanceBean.cbMesVencido}" selected="true"
+                                    visible="#{PerformanceBean.anoRuptura == PerformanceBean.anoRupturaMax}" partialTriggers="ins1"/>
+          <af:selectOneChoice value="#{bindings.TipoGrafico.inputValue}" label="#{bindings.TipoGrafico.label}" shortDesc="#{bindings.TipoGrafico.hints.tooltip}"
+                              id="soc1" autoSubmit="true">
+            <f:selectItems value="#{bindings.TipoGrafico.items}" id="si1"/>
+          </af:selectOneChoice>
+          <af:selectOneChoice value="#{bindings.Grafico.inputValue}" label="#{bindings.Grafico.label}" shortDesc="#{bindings.Grafico.hints.tooltip}" id="soc2"
+                              autoSubmit="true" partialTriggers="soc1">
+            <f:selectItems value="#{bindings.Grafico.items}" id="si2"/>
+          </af:selectOneChoice>
+          <af:selectOneChoice value="#{bindings.Seccion.inputValue}" label="#{bindings.Seccion.label}" shortDesc="#{bindings.Seccion.hints.tooltip}" id="soc3"
+                              autoSubmit="true" valueChangeListener="#{PerformanceBean.valueChangeListenerSeccion}">
+            <f:selectItems value="#{bindings.Seccion.items}" id="si3"/>
+          </af:selectOneChoice>
+          <af:selectOneChoice value="#{bindings.Celula.inputValue}" label="#{bindings.Celula.label}" shortDesc="#{bindings.Celula.hints.tooltip}" id="soc4"
+                              autoSubmit="true" partialTriggers="soc3 sbc1" binding="#{PerformanceBean.socCelulas}"
+                              disabled="#{PerformanceBean.mostrarCelulasAgrup}">
+            <f:selectItems value="#{bindings.Celula.items}" id="si4"/>
+          </af:selectOneChoice>
+          <af:selectBooleanCheckbox text="#{viewcontrollerBundle.SELECCIONAR_AGRUPACION_DE_CELULAS}" id="sbc1" value="#{PerformanceBean.mostrarCelulasAgrup}"
+                                    visible="#{PerformanceBean.mostrarCheckCelulasAgrup}" partialTriggers="soc3" autoSubmit="true"/>
+          <af:selectOneChoice value="-1" label="#{viewcontrollerBundle.SELECCIONAR_AGRUPACION}" id="so5" autoSubmit="true" partialTriggers="sbc1"
+                              visible="#{PerformanceBean.mostrarCelulasAgrup}" binding="#{PerformanceBean.socCelulasAgrup}">
+            <f:selectItems value="#{PerformanceBean.listaCelulasAgrup}" id="si6"/>
+          </af:selectOneChoice>
+          <af:commandButton text="#{viewcontrollerBundle.REFRESCAR_GRAFICO}"
+                            disabled="#{!bindings.ExecuteWithParams.enabled or bindings.MgraIdGra.attributeValue == null or PerformanceBean.cuentaCelulas == 0}"
+                            id="cb1" actionListener="#{PerformanceBean.refrescarGrafico}" partialSubmit="true" partialTriggers="soc2"/>
+        </af:panelFormLayout>
+        <Grafico:CompDecGrafico id="cdg1" graphModel="#{bindings.Performance.graphModel}" titulo="#{PerformanceBean.tituloGrafico}"
+                                 subtitulo="#{PerformanceBean.subtituloGrafico}" inLineStyleComp="width:841px;height:595px"
+                                 sentidoMejor="#{PerformanceBean.sentidoMejor}" arrayValorMarkers="#{PerformanceBean.valorMarkers}" renderMarkerText="true"
+                                 sizeMarkerText="12" partialTriggersComp="cb1" autoPrecisionType="off" scalingType="none" mostrarImprimir="true"
+                                 printWidth="1315" printHeight="930" printRutaDestino="#{PerformanceBean.rutaDestino}"
+                                 rutaFicheroXSL="#{PerformanceBean.rutaFicheroXSL}" convNumberTypeY1="#{PerformanceBean.convNumberType}"
+                                 convNumberCurrencySymbolY1="#{PerformanceBean.convNumberCurrencySymbol}" maxFractionDigitsY1="#{PerformanceBean.maxFractionDigits}"
+                                 textoEsquinaSupIzq="#{PerformanceBean.textoEsquinaSupIzq}" textoEsquinaSupDer="#{PerformanceBean.textoEsquinaSupDer}"
+                                 fileName="#{PerformanceBean.fileName}" formatoSalida="#{PerformanceBean.formatoSalida}" descargaDirecta="true"/>
+      </af:form>
+    </af:document>
+  </f:view>
+</jsp:root>

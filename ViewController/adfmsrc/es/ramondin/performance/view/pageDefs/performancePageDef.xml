@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pageDefinition xmlns="http://xmlns.oracle.com/adfm/uimodel" version="11.1.1.64.93" id="performancePageDef" Package="es.ramondin.performance.view.pageDefs">
+  <parameters/>
+  <executables>
+    <variableIterator id="variables"/>
+    <iterator Binds="Grafico" RangeSize="25" DataControl="PerformanceOracleAMDataControl" id="GraficoIterator"/>
+    <iterator Binds="Performance" RangeSize="-1" DataControl="PerformanceOracleAMDataControl" id="PerformanceIterator"/>
+    <iterator Binds="TipoGrafico" RangeSize="25" DataControl="PerformanceOracleAMDataControl" id="TipoGraficoIterator"/>
+    <iterator Binds="Seccion" RangeSize="25" DataControl="PerformanceAMDataControl" id="SeccionIterator"/>
+    <iterator Binds="Celula" RangeSize="25" DataControl="PerformanceAMDataControl" id="CelulaIterator"/>
+    <iterator Binds="Marker" RangeSize="25" DataControl="PerformanceOracleAMDataControl" id="MarkerIterator"/>
+  </executables>
+  <bindings>
+    <graph IterBinding="PerformanceIterator" id="Performance" xmlns="http://xmlns.oracle.com/adfm/dvt" type="COMBINATION_VERT_ABS">
+      <graphDataMap leafOnly="true">
+        <series>
+          <data>
+            <item value="PerfDatoAnual"/>
+            <item value="PerfDatoMensual"/>
+          </data>
+        </series>
+        <groups>
+          <item value="PerfPeriodoEdit"/>
+        </groups>
+      </graphDataMap>
+    </graph>
+    <action IterBinding="PerformanceIterator" id="ExecuteWithParams" InstanceName="PerformanceOracleAMDataControl.Performance"
+            DataControl="PerformanceOracleAMDataControl" RequiresUpdateModel="true" Action="executeWithParams">
+      <NamedData NDName="PerfEmpresaBV" NDType="oracle.jbo.domain.Number"/>
+      <NamedData NDName="PerfSeccionBV" NDType="oracle.jbo.domain.Number"/>
+      <NamedData NDName="PerfCelulaBV" NDType="oracle.jbo.domain.Number"/>
+      <NamedData NDName="AnoRupturaBV" NDType="oracle.jbo.domain.Number"/>
+      <NamedData NDName="AnosHistoricoBV" NDType="oracle.jbo.domain.Number"/>
+    </action>
+    <methodAction IterBinding="PerformanceIterator" id="getQuerySQL" RequiresUpdateModel="true" Action="invokeMethod" MethodName="getQuerySQL"
+                  IsViewObjectMethod="true" DataControl="PerformanceOracleAMDataControl" InstanceName="PerformanceOracleAMDataControl.Performance"
+                  ReturnName="data.PerformanceOracleAMDataControl.methodResults.getQuerySQL_PerformanceOracleAMDataControl_Performance_getQuerySQL_result"/>
+    <methodAction IterBinding="PerformanceIterator" id="setQuerySQL" RequiresUpdateModel="true" Action="invokeMethod" MethodName="setQuerySQL"
+                  IsViewObjectMethod="true" DataControl="PerformanceOracleAMDataControl" InstanceName="PerformanceOracleAMDataControl.Performance">
+      <NamedData NDName="querySQL" NDType="java.lang.String"/>
+    </methodAction>
+    <methodAction IterBinding="PerformanceIterator" id="setCamposAnualMensualBD" RequiresUpdateModel="true" Action="invokeMethod"
+                  MethodName="setCamposAnualMensualBD" IsViewObjectMethod="true" DataControl="PerformanceOracleAMDataControl"
+                  InstanceName="PerformanceOracleAMDataControl.Performance"/>
+    <list IterBinding="TipoGraficoIterator" ListOperMode="navigation" ListIter="TipoGraficoIterator" id="TipoGrafico" DTSupportsMRU="true">
+      <AttrNames>
+        <Item Value="DescTipoGraficoTrans"/>
+      </AttrNames>
+    </list>
+    <list IterBinding="GraficoIterator" ListOperMode="navigation" ListIter="GraficoIterator" id="Grafico" DTSupportsMRU="true">
+      <AttrNames>
+        <Item Value="DescGraficoTrans"/>
+      </AttrNames>
+    </list>
+    <list IterBinding="SeccionIterator" ListOperMode="navigation" ListIter="SeccionIterator" id="Seccion" DTSupportsMRU="true">
+      <AttrNames>
+        <Item Value="DescSeccionTrans"/>
+      </AttrNames>
+    </list>
+    <list IterBinding="CelulaIterator" ListOperMode="navigation" ListIter="CelulaIterator" id="Celula" DTSupportsMRU="true">
+      <AttrNames>
+        <Item Value="DescCelulaTrans"/>
+      </AttrNames>
+    </list>
+    <attributeValues IterBinding="TipoGraficoIterator" id="MtgrIdTgr">
+      <AttrNames>
+        <Item Value="MtgrIdTgr"/>
+      </AttrNames>
+    </attributeValues>
+    <attributeValues IterBinding="GraficoIterator" id="MgraIdGra">
+      <AttrNames>
+        <Item Value="MgraIdGra"/>
+      </AttrNames>
+    </attributeValues>
+    <attributeValues IterBinding="SeccionIterator" id="MvarSecuen3">
+      <AttrNames>
+        <Item Value="MvarSecuen3"/>
+      </AttrNames>
+    </attributeValues>
+    <attributeValues IterBinding="CelulaIterator" id="MvarSecuen13">
+      <AttrNames>
+        <Item Value="MvarSecuen13"/>
+      </AttrNames>
+    </attributeValues>
+    <attributeValues IterBinding="GraficoIterator" id="MgraTitulo">
+      <AttrNames>
+        <Item Value="MgraTitulo"/>
+      </AttrNames>
+    </attributeValues>
+    <attributeValues IterBinding="GraficoIterator" id="MgraSubtitulo">
+      <AttrNames>
+        <Item Value="MgraSubtitulo"/>
+      </AttrNames>
+    </attributeValues>
+    <methodAction id="hayExcepciones" RequiresUpdateModel="true" Action="invokeMethod" MethodName="hayExcepciones" IsViewObjectMethod="true"
+                  DataControl="PerformanceAMDataControl" InstanceName="PerformanceAMDataControl.Excepcion"
+                  ReturnName="data.PerformanceAMDataControl.methodResults.hayExcepciones_PerformanceAMDataControl_Excepcion_hayExcepciones_result"/>
+    <methodAction id="getCelulasExcepcion" RequiresUpdateModel="true" Action="invokeMethod" MethodName="getCelulasExcepcion" IsViewObjectMethod="true"
+                  DataControl="PerformanceAMDataControl" InstanceName="PerformanceAMDataControl.Excepcion"
+                  ReturnName="data.PerformanceAMDataControl.methodResults.getCelulasExcepcion_PerformanceAMDataControl_Excepcion_getCelulasExcepcion_result"/>
+    <methodAction id="getValor" RequiresUpdateModel="true" Action="invokeMethod" MethodName="getValor" IsViewObjectMethod="true"
+                  DataControl="PerformanceOracleAMDataControl" InstanceName="PerformanceOracleAMDataControl.Parametro"
+                  ReturnName="data.PerformanceOracleAMDataControl.methodResults.getValor_PerformanceOracleAMDataControl_Parametro_getValor_result">
+      <NamedData NDName="param" NDType="java.lang.String"/>
+    </methodAction>
+    <methodAction IterBinding="GraficoIterator" id="getTipoEjeY" RequiresUpdateModel="true" Action="invokeMethod" MethodName="getTipoEjeY"
+                  IsViewObjectMethod="true" DataControl="PerformanceOracleAMDataControl" InstanceName="PerformanceOracleAMDataControl.Grafico"
+                  ReturnName="data.PerformanceOracleAMDataControl.methodResults.getTipoEjeY_PerformanceOracleAMDataControl_Grafico_getTipoEjeY_result"/>
+    <methodAction IterBinding="GraficoIterator" id="getUnidadesEjeY" RequiresUpdateModel="true" Action="invokeMethod" MethodName="getUnidadesEjeY"
+                  IsViewObjectMethod="true" DataControl="PerformanceOracleAMDataControl" InstanceName="PerformanceOracleAMDataControl.Grafico"
+                  ReturnName="data.PerformanceOracleAMDataControl.methodResults.getUnidadesEjeY_PerformanceOracleAMDataControl_Grafico_getUnidadesEjeY_result"/>
+    <methodAction IterBinding="PerformanceIterator" id="executeWithParamsEdit" RequiresUpdateModel="true" Action="invokeMethod"
+                  MethodName="executeWithParamsEdit" IsViewObjectMethod="true" DataControl="PerformanceOracleAMDataControl"
+                  InstanceName="PerformanceOracleAMDataControl.Performance">
+      <NamedData NDName="seccion" NDType="java.math.BigDecimal"/>
+      <NamedData NDName="celula" NDType="java.math.BigDecimal"/>
+      <NamedData NDName="celulaAgrup" NDType="java.lang.Integer"/>
+      <NamedData NDName="celulasExcepcion" NDType="java.util.ArrayList"/>
+      <NamedData NDName="anoRuptura" NDType="java.lang.Integer"/>
+      <NamedData NDName="anosHistorico" NDType="java.lang.Integer"/>
+      <NamedData NDName="hastaFecha" NDType="java.lang.Integer"/>
+    </methodAction>
+    <attributeValues IterBinding="GraficoIterator" id="IdTipoGraIdGraTrans">
+      <AttrNames>
+        <Item Value="IdTipoGraIdGraTrans"/>
+      </AttrNames>
+    </attributeValues>
+    <methodAction IterBinding="MarkerIterator" id="getValorMarkers" RequiresUpdateModel="true" Action="invokeMethod" MethodName="getValorMarkers"
+                  IsViewObjectMethod="true" DataControl="PerformanceOracleAMDataControl" InstanceName="PerformanceOracleAMDataControl.Marker"
+                  ReturnName="data.PerformanceOracleAMDataControl.methodResults.getValorMarkers_PerformanceOracleAMDataControl_Marker_getValorMarkers_result">
+      <NamedData NDName="desdeFecha" NDType="java.sql.Date"/>
+    </methodAction>
+    <methodAction IterBinding="MarkerIterator" id="getSentidoMejor" RequiresUpdateModel="true" Action="invokeMethod" MethodName="getSentidoMejor"
+                  IsViewObjectMethod="true" DataControl="PerformanceOracleAMDataControl" InstanceName="PerformanceOracleAMDataControl.Marker"
+                  ReturnName="data.PerformanceOracleAMDataControl.methodResults.getSentidoMejor_PerformanceOracleAMDataControl_Marker_getSentidoMejor_result">
+      <NamedData NDName="desdeFecha" NDType="java.sql.Date"/>
+    </methodAction>
+    <methodAction IterBinding="GraficoIterator" id="getMaxDecimales" RequiresUpdateModel="true" Action="invokeMethod" MethodName="getMaxDecimales"
+                  IsViewObjectMethod="true" DataControl="PerformanceOracleAMDataControl" InstanceName="PerformanceOracleAMDataControl.Grafico"
+                  ReturnName="data.PerformanceOracleAMDataControl.methodResults.getMaxDecimales_PerformanceOracleAMDataControl_Grafico_getMaxDecimales_result"/>
+  </bindings>
+  <events xmlns="http://xmlns.oracle.com/adfm/contextualEvent">
+    <event name="miEvento" eventType="Value Change Event"/>
+  </events>
+</pageDefinition>

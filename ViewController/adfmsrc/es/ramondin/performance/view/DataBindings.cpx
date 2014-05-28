@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://xmlns.oracle.com/adfm/application" version="11.1.1.64.93" id="DataBindings" SeparateXMLFiles="false"
+             Package="es.ramondin.performance.view"
+             ClientType="Generic">
+  <definitionFactories>
+    <factory nameSpace="http://xmlns.oracle.com/adfm/dvt" className="oracle.adfinternal.view.faces.dvt.model.binding.FacesBindingFactory"/>
+  </definitionFactories>
+  <pageMap>
+    <page path="/performance.jspx" usageId="es_ramondin_performance_view_performancePageDef"/>
+    <page path="/servletgraficos" usageId="es_ramondin_performance_view_performancePageDef"/>
+    <page path="/ishikawa.jspx" usageId="es_ramondin_performance_view_ishikawaPageDef"/>
+    <page path="/cuadroMando.jspx" usageId="es_ramondin_performance_view_cuadroMandoPageDef"/>
+    <page path="/pruebaMantExcel.jspx" usageId="es_ramondin_performance_view_pruebaMantExcelPageDef"/>
+  </pageMap>
+  <pageDefinitionUsages>
+    <page id="es_ramondin_performance_view_performancePageDef" path="es.ramondin.performance.view.pageDefs.performancePageDef"/>
+    <page id="es_ramondin_performance_view_ishikawaPageDef" path="es.ramondin.performance.view.pageDefs.ishikawaPageDef"/>
+    <page id="es_ramondin_performance_view_cuadroMandoPageDef" path="es.ramondin.performance.view.pageDefs.cuadroMandoPageDef"/>
+    <page id="es_ramondin_performance_view_pruebaMantExcelPageDef" path="es.ramondin.performance.view.pageDefs.pruebaMantExcelPageDef"/>
+  </pageDefinitionUsages>
+  <dataControlUsages>
+    <BC4JDataControl id="PerformanceAMDataControl" Package="es.ramondin.performance.model" FactoryClass="oracle.adf.model.bc4j.DataControlFactoryImpl"
+                     SupportsTransactions="true" SupportsFindMode="true" SupportsRangesize="true" SupportsResetState="true" SupportsSortCollection="true"
+                     Configuration="PerformanceAMLocal" syncMode="Immediate" xmlns="http://xmlns.oracle.com/adfm/datacontrol"/>
+    <BC4JDataControl id="PerformanceOracleAMDataControl" Package="es.ramondin.performance.modelOracle" FactoryClass="oracle.adf.model.bc4j.DataControlFactoryImpl"
+                     SupportsTransactions="true" SupportsFindMode="true" SupportsRangesize="true" SupportsResetState="true" SupportsSortCollection="true"
+                     Configuration="PerformanceOracleAMLocal" syncMode="Immediate" xmlns="http://xmlns.oracle.com/adfm/datacontrol"/>
+  </dataControlUsages>
+</Application>

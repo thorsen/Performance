@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<adfc-config xmlns="http://xmlns.oracle.com/adf/controller" version="1.2">
+  <managed-bean id="__2">
+    <managed-bean-name id="__1">PerformanceBean</managed-bean-name>
+    <managed-bean-class id="__4">es.ramondin.performance.view.beans.PerformanceBean</managed-bean-class>
+    <managed-bean-scope id="__3">session</managed-bean-scope>
+  </managed-bean>
+  <managed-bean id="__8">
+    <managed-bean-name id="__5">IshikawaBean</managed-bean-name>
+    <managed-bean-class id="__6">es.ramondin.performance.view.beans.IshikawaBean</managed-bean-class>
+    <managed-bean-scope id="__7">session</managed-bean-scope>
+  </managed-bean>
+  <managed-bean id="__9">
+    <managed-bean-name id="__12">CuadroMandoBean</managed-bean-name>
+    <managed-bean-class id="__10">es.ramondin.performance.view.beans.CuadroMandoBean</managed-bean-class>
+    <managed-bean-scope id="__11">request</managed-bean-scope>
+  </managed-bean>
+</adfc-config>

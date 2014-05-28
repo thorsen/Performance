@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<!DOCTYPE ViewObject SYSTEM "jbo_03_01.dtd">
+<!---->
+<ViewObject
+  xmlns="http://xmlns.oracle.com/bc4j"
+  Name="PerformanceVO"
+  Version="11.1.1.64.93"
+  InheritPersonalization="true"
+  OrderBy="PERF_PERIODO, PERF_EMPRESA, PERF_SECCION"
+  BindingStyle="OracleName"
+  CustomQuery="true"
+  ComponentClass="es.ramondin.performance.modelOracle.views.PerformanceVOImpl"
+  ComponentInterface="es.ramondin.performance.modelOracle.views.common.PerformanceVO"
+  ClientProxyName="es.ramondin.performance.modelOracle.views.client.PerformanceVOClient"
+  FetchMode="FETCH_AS_NEEDED"
+  PageIterMode="Full"
+  UseGlueCode="false"
+  RowClass="es.ramondin.performance.modelOracle.views.PerformanceVORowImpl">
+  <DesignTime>
+    <Attr Name="_codeGenFlag2" Value="Access|Coll|VarAccess"/>
+    <Attr Name="_isExpertMode" Value="true"/>
+    <Attr Name="_isCodegen" Value="true"/>
+  </DesignTime>
+  <Properties>
+    <SchemaBasedProperties>
+      <LABEL
+        ResId="es.ramondin.performance.modelOracle.views.PerformanceVO_LABEL"/>
+    </SchemaBasedProperties>
+  </Properties>
+  <Variable
+    Name="PerfEmpresaBV"
+    Kind="where"
+    Type="oracle.jbo.domain.Number">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="8"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="PerfSeccionBV"
+    Kind="where"
+    Type="oracle.jbo.domain.Number">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="9"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="PerfCelulaBV"
+    Kind="where"
+    Type="oracle.jbo.domain.Number">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="0"/>
+      <Item Value="10"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="AnoRupturaBV"
+    Kind="where"
+    Type="oracle.jbo.domain.Number">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="1"/>
+      <Item Value="3"/>
+      <Item Value="4"/>
+      <Item Value="6"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="AnosHistoricoBV"
+    Kind="where"
+    Type="oracle.jbo.domain.Number">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="2"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="HastaFechaBV"
+    Kind="where"
+    Type="oracle.jbo.domain.Number">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="5"/>
+      <Item Value="7"/>
+    </AttrArray>
+  </Variable>
+  <SQLQuery>
+    <![CDATA[SELECT PERF_PERIODO, PERF_PERIODO_EDIT, PERF_TIPO_PERIODO, PERF_EMPRESA, PERF_SECCION,
+    SUM(CASE
+            WHEN :PerfCelulaBV IS NULL THEN NULL
+            ELSE PERF_CELULA
+        END) AS PERF_CELULA,
+    SUM(NULL) AS PERF_DATO_ANUAL,
+    SUM(NULL) AS PERF_DATO_MENSUAL
+FROM (
+    SELECT
+        FLOOR(PERF_FECHAJOR / 10000) AS PERF_PERIODO,
+        TO_CHAR(FLOOR (PERF_FECHAJOR / 10000)) AS PERF_PERIODO_EDIT,
+        -1 AS PERF_TIPO_PERIODO,
+        PERF_EMPRESA,
+        PERF_SECCION,
+        PERF_CELULA,
+        COUNT(DISTINCT PERF_FECHAJOR) AS PERF_FECHAJOR_EDIT,
+        SUM(PERF_PRODUCIDO) AS PERF_PRODUCIDO_ANUAL,
+        SUM(NULL) AS PERF_PRODUCIDO_MENSUAL,
+        SUM(PERF_TPCAMBIO) AS PERF_TPCAMBIO_ANUAL,
+        SUM(NULL) AS PERF_TPCAMBIO_MENSUAL,
+        SUM(PERF_TPLIMPIEZA) AS PERF_TPLIMPIEZA_ANUAL,
+        SUM(NULL) AS PERF_TPLIMPIEZA_MENSUAL,
+        SUM(PERF_TPLIMPIEZAC) AS PERF_TPLIMPIEZAC_ANUAL,
+        SUM(NULL) AS PERF_TPLIMPIEZAC_MENSUAL,
+        SUM(PERF_TPREGLAJE) AS PERF_TPREGLAJE_ANUAL,
+        SUM(NULL) AS PERF_TPREGLAJE_MENSUAL,
+        SUM(PERF_TPTINTAS) AS PERF_TPTINTAS_ANUAL,
+        SUM(NULL) AS PERF_TPTINTAS_MENSUAL,
+        SUM(PERF_TPMATERIAL) AS PERF_TPMATERIAL_ANUAL,
+        SUM(NULL) AS PERF_TPMATERIAL_MENSUAL,
+        SUM(PERF_TPMANTENI) AS PERF_TPMANTENI_ANUAL,
+        SUM(NULL) AS PERF_TPMANTENI_MENSUAL,
+        SUM(PERF_TPMANINTER) AS PERF_TPMANINTER_ANUAL,
+        SUM(NULL) AS PERF_TPMANINTER_MENSUAL,
+        SUM(PERF_TVACIO) AS PERF_TVACIO_ANUAL,
+        SUM(NULL) AS PERF_TVACIO_MENSUAL,
+        SUM(PERF_TPNOATEND) AS PERF_TPNOATEND_ANUAL,
+        SUM(NULL) AS PERF_TPNOATEND_MENSUAL,
+        SUM(PERF_TPSINMOT) AS PERF_TPSINMOT_ANUAL,
+        SUM(NULL) AS PERF_TPSINMOT_MENSUAL,
+        SUM(PERF_TPUTIL) AS PERF_TPUTIL_ANUAL,
+        SUM(NULL) AS PERF_TPUTIL_MENSUAL,
+        SUM(PERF_TBONO) AS PERF_TBONO_ANUAL,
+        SUM(NULL) AS PERF_TBONO_MENSUAL,
+        SUM(PERF_TBOCADILLO) AS PERF_TBOCADILLO_ANUAL,
+        SUM(NULL) AS PERF_TBOCADILLO_MENSUAL,
+        SUM(PERF_PRODEQUIV) AS PERF_PRODEQUIV_ANUAL,
+        SUM(NULL) AS PERF_PRODEQUIV_MENSUAL,
+        SUM(CASE
+                WHEN PERF_SWPRODTEOR = 'S' THEN PERF_PRODTEOR
+                ELSE PERF_PRODUCIDO
+            END) AS PERF_PRODUCIDO_EDIT_ANUAL,
+        SUM(NULL) AS PERF_PRODUCIDO_EDIT_MENSUAL,
+        SUM(CASE
+                WHEN PERF_LABORABLE = 'S' AND (PERF_PRODUCIDO != 0 OR (PERF_TBONO + PERF_TMUESTRAS) != PERF_TBOCADILLO) THEN
+                    CASE
+                        WHEN PERF_SWPRODTEOR = 'S' THEN PERF_PRODTEOR
+                        ELSE PERF_PRODUCIDO
+                    END
+                ELSE 0
+            END) AS PERF_PRODULABO_EDIT_ANUAL,
+        SUM(NULL) AS PERF_PRODULABO_EDIT_MENSUAL,
+        SUM(PERF_TDESCANSO) AS PERF_TDESCANSO_ANUAL,
+        SUM(NULL) AS PERF_TDESCANSO_MENSUAL,
+        SUM(PERF_TMOD) AS PERF_TMOD_ANUAL,
+        SUM(NULL) AS PERF_TMOD_MENSUAL,
+        SUM(PERF_TMUESTRAS) AS PERF_TMUESTRAS_ANUAL,
+        SUM(NULL) AS PERF_TMUESTRAS_MENSUAL,
+        SUM(PERF_TNECESPERS) AS PERF_TNECESPERS_ANUAL,
+        SUM(NULL) AS PERF_TNECESPERS_MENSUAL,
+        SUM(PERF_TNOCONTROL) AS PERF_TNOCONTROL_ANUAL,
+        SUM(NULL) AS PERF_TNOCONTROL_MENSUAL,
+        SUM(PERF_TNOIMPUT) AS PERF_TNOIMPUT_ANUAL,
+        SUM(NULL) AS PERF_TNOIMPUT_MENSUAL,
+        SUM(PERF_TNPRODNP) AS PERF_TNPRODNP_ANUAL,
+        SUM(NULL) AS PERF_TNPRODNP_MENSUAL,
+        SUM(PERF_TNPRODP) AS PERF_TNPRODP_ANUAL,
+        SUM(NULL) AS PERF_TNPRODP_MENSUAL,
+        SUM(PERF_TPARO) AS PERF_TPARO_ANUAL,
+        SUM(NULL) AS PERF_TPARO_MENSUAL,
+        SUM(PERF_TPCARTACOL) AS PERF_TPCARTACOL_ANUAL,
+        SUM(NULL) AS PERF_TPCARTACOL_MENSUAL,
+        SUM(PERF_TPDECICOME) AS PERF_TPDECICOME_ANUAL,
+        SUM(NULL) AS PERF_TPDECICOME_MENSUAL,
+        SUM(PERF_TPIMASD) AS PERF_TPIMASD_ANUAL,
+        SUM(NULL) AS PERF_TPIMASD_MENSUAL,
+        SUM(PERF_TPREFORMA) AS PERF_TPREFORMA_ANUAL,
+        SUM(NULL) AS PERF_TPREFORMA_MENSUAL,
+        SUM(PERF_TPAROCONOF) AS PERF_TPAROCONOF_ANUAL,
+        SUM(NULL) AS PERF_TPAROCONOF_MENSUAL,
+        SUM(PERF_TPAROPROGR) AS PERF_TPAROPROGR_ANUAL,
+        SUM(NULL) AS PERF_TPAROPROGR_MENSUAL,
+        SUM(PERF_TPESPEURGE) AS PERF_TPESPEURGE_ANUAL,
+        SUM(NULL) AS PERF_TPESPEURGE_MENSUAL,
+        SUM(PERF_TPRESENCIA) AS PERF_TPRESENCIA_ANUAL,
+        SUM(NULL) AS PERF_TPRESENCIA_MENSUAL,
+        SUM(PERF_CONSUMIDO) AS PERF_CONSUMIDO_ANUAL,
+        SUM(NULL) AS PERF_CONSUMIDO_MENSUAL,
+        SUM(PERF_CADENA) AS PERF_CADENA_ANUAL,
+        SUM(NULL) AS PERF_CADENA_MENSUAL,
+        SUM(PERF_CAPSUCAMB) AS PERF_CAPSUCAMB_ANUAL,
+        SUM(NULL) AS PERF_CAPSUCAMB_MENSUAL,
+        SUM(PERF_PRODCAMB) AS PERF_PRODCAMB_ANUAL,
+        SUM(NULL) AS PERF_PRODCAMB_MENSUAL,
+        SUM(PERF_NROCAMBC) AS PERF_NROCAMBC_ANUAL,
+        SUM(NULL) AS PERF_NROCAMBC_MENSUAL,
+        SUM(PERF_TPOCAMBC) AS PERF_TPOCAMBC_ANUAL,
+        SUM(NULL) AS PERF_TPOCAMBC_MENSUAL,
+        SUM(PERF_TPOREGLC) AS PERF_TPOREGLC_ANUAL,
+        SUM(NULL) AS PERF_TPOREGLC_MENSUAL,
+        SUM(PERF_TPOTINTC) AS PERF_TPOTINTC_ANUAL,
+        SUM(NULL) AS PERF_TPOTINTC_MENSUAL,
+        SUM(PERF_TPOCAMB) AS PERF_TPOCAMB_ANUAL,
+        SUM(NULL) AS PERF_TPOCAMB_MENSUAL,
+        SUM(PERF_TPOREGL) AS PERF_TPOREGL_ANUAL,
+        SUM(NULL) AS PERF_TPOREGL_MENSUAL,
+        SUM(PERF_TPOTINT) AS PERF_TPOTINT_ANUAL,
+        SUM(NULL) AS PERF_TPOTINT_MENSUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_PROD_DESP 
+                ELSE NULL
+            END) AS PERF_PROD_DESP_ANUAL,
+        SUM(NULL) AS PERF_PROD_DESP_MENSUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_CONS_DESP 
+                ELSE NULL
+            END) AS PERF_CONS_DESP_ANUAL,
+        SUM(NULL) AS PERF_CONS_DESP_MENSUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_CAD_DESP 
+                ELSE NULL
+            END) AS PERF_CAD_DESP_ANUAL,
+        SUM(NULL) AS PERF_CAD_DESP_MENSUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_CCAMB_DESP 
+                ELSE NULL
+            END) AS PERF_CCAMB_DESP_ANUAL,
+        SUM(NULL) AS PERF_CCAMB_DESP_MENSUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_PCAMB_DESP 
+                ELSE NULL
+            END) AS PERF_PCAMB_DESP_ANUAL,
+        SUM(NULL) AS PERF_PCAMB_DESP_MENSUAL
+    FROM
+        TPROPERF_L
+    WHERE
+        PERF_FECHAJOR > :AnoRupturaBV - :AnosHistoricoBV || '0000'
+        AND PERF_FECHAJOR < :AnoRupturaBV || '0000'
+    GROUP BY
+        FLOOR (PERF_FECHAJOR / 10000),
+        -1,
+        PERF_EMPRESA,
+        PERF_SECCION,
+        PERF_CELULA
+    
+    UNION ALL
+    
+    SELECT
+        FLOOR(PERF_FECHAJOR / 10000) AS PERF_PERIODO,
+        TO_CHAR(FLOOR (PERF_FECHAJOR / 10000)) AS PERF_PERIODO_EDIT,
+        0 AS PERF_TIPO_PERIODO,
+        PERF_EMPRESA,
+        PERF_SECCION,
+        PERF_CELULA,
+        COUNT(DISTINCT PERF_FECHAJOR) AS PERF_FECHAJOR_EDIT,
+        SUM(PERF_PRODUCIDO) AS PERF_PRODUCIDO_ANUAL,
+        SUM(PERF_PRODUCIDO) AS PERF_PRODUCIDO_MENSUAL,
+        SUM(PERF_TPCAMBIO) AS PERF_TPCAMBIO_ANUAL,
+        SUM(PERF_TPCAMBIO) AS PERF_TPCAMBIO_MENSUAL,
+        SUM(PERF_TPLIMPIEZA) AS PERF_TPLIMPIEZA_ANUAL,
+        SUM(PERF_TPLIMPIEZA) AS PERF_TPLIMPIEZA_MENSUAL,
+        SUM(PERF_TPLIMPIEZAC) AS PERF_TPLIMPIEZAC_ANUAL,
+        SUM(PERF_TPLIMPIEZAC) AS PERF_TPLIMPIEZAC_MENSUAL,
+        SUM(PERF_TPREGLAJE) AS PERF_TPREGLAJE_ANUAL,
+        SUM(PERF_TPREGLAJE) AS PERF_TPREGLAJE_MENSUAL,
+        SUM(PERF_TPTINTAS) AS PERF_TPTINTAS_ANUAL,
+        SUM(PERF_TPTINTAS) AS PERF_TPTINTAS_MENSUAL,
+        SUM(PERF_TPMATERIAL) AS PERF_TPMATERIAL_ANUAL,
+        SUM(PERF_TPMATERIAL) AS PERF_TPMATERIAL_MENSUAL,
+        SUM(PERF_TPMANTENI) AS PERF_TPMANTENI_ANUAL,
+        SUM(PERF_TPMANTENI) AS PERF_TPMANTENI_MENSUAL,
+        SUM(PERF_TPMANINTER) AS PERF_TPMANINTER_ANUAL,
+        SUM(PERF_TPMANINTER) AS PERF_TPMANINTER_MENSUAL,
+        SUM(PERF_TVACIO) AS PERF_TVACIO_ANUAL,
+        SUM(PERF_TVACIO) AS PERF_TVACIO_MENSUAL,
+        SUM(PERF_TPNOATEND) AS PERF_TPNOATEND_ANUAL,
+        SUM(PERF_TPNOATEND) AS PERF_TPNOATEND_MENSUAL,
+        SUM(PERF_TPSINMOT) AS PERF_TPSINMOT_ANUAL,
+        SUM(PERF_TPSINMOT) AS PERF_TPSINMOT_MENSUAL,
+        SUM(PERF_TPUTIL) AS PERF_TPUTIL_ANUAL,
+        SUM(PERF_TPUTIL) AS PERF_TPUTIL_MENSUAL,
+        SUM(PERF_TBONO) AS PERF_TBONO_ANUAL,
+        SUM(PERF_TBONO) AS PERF_TBONO_MENSUAL,
+        SUM(PERF_TBOCADILLO) AS PERF_TBOCADILLO_ANUAL,
+        SUM(PERF_TBOCADILLO) AS PERF_TBOCADILLO_MENSUAL,
+        SUM(PERF_PRODEQUIV) AS PERF_PRODEQUIV_ANUAL,
+        SUM(PERF_PRODEQUIV) AS PERF_PRODEQUIV_MENSUAL,
+        SUM(CASE
+                WHEN PERF_SWPRODTEOR = 'S' THEN PERF_PRODTEOR
+                ELSE PERF_PRODUCIDO
+            END) AS PERF_PRODUCIDO_EDIT_ANUAL,
+        SUM(CASE
+                WHEN PERF_SWPRODTEOR = 'S' THEN PERF_PRODTEOR
+                ELSE PERF_PRODUCIDO
+            END) AS PERF_PRODUCIDO_EDIT_MENSUAL,
+        SUM(CASE
+                WHEN PERF_LABORABLE = 'S' AND (PERF_PRODUCIDO != 0 OR (PERF_TBONO + PERF_TMUESTRAS) != PERF_TBOCADILLO) THEN
+                    CASE
+                        WHEN PERF_SWPRODTEOR = 'S' THEN PERF_PRODTEOR
+                        ELSE PERF_PRODUCIDO
+                    END
+                ELSE 0
+            END) AS PERF_PRODULABO_EDIT_ANUAL,
+        SUM(CASE
+            WHEN PERF_LABORABLE = 'S' AND (PERF_PRODUCIDO != 0 OR (PERF_TBONO + PERF_TMUESTRAS) != PERF_TBOCADILLO) THEN
+                CASE
+                    WHEN PERF_SWPRODTEOR = 'S' THEN PERF_PRODTEOR
+                    ELSE PERF_PRODUCIDO
+                END
+            ELSE 0
+        END) AS PERF_PRODULABO_EDIT_MENSUAL,
+        SUM(PERF_TDESCANSO) AS PERF_TDESCANSO_ANUAL,
+        SUM(PERF_TDESCANSO) AS PERF_TDESCANSO_MENSUAL,
+        SUM(PERF_TMOD) AS PERF_TMOD_ANUAL,
+        SUM(PERF_TMOD) AS PERF_TMOD_MENSUAL,
+        SUM(PERF_TMUESTRAS) AS PERF_TMUESTRAS_ANUAL,
+        SUM(PERF_TMUESTRAS) AS PERF_TMUESTRAS_MENSUAL,
+        SUM(PERF_TNECESPERS) AS PERF_TNECESPERS_ANUAL,
+        SUM(PERF_TNECESPERS) AS PERF_TNECESPERS_MENSUAL,
+        SUM(PERF_TNOCONTROL) AS PERF_TNOCONTROL_ANUAL,
+        SUM(PERF_TNOCONTROL) AS PERF_TNOCONTROL_MENSUAL,
+        SUM(PERF_TNOIMPUT) AS PERF_TNOIMPUT_ANUAL,
+        SUM(PERF_TNOIMPUT) AS PERF_TNOIMPUT_MENSUAL,
+        SUM(PERF_TNPRODNP) AS PERF_TNPRODNP_ANUAL,
+        SUM(PERF_TNPRODNP) AS PERF_TNPRODNP_MENSUAL,
+        SUM(PERF_TNPRODP) AS PERF_TNPRODP_ANUAL,
+        SUM(PERF_TNPRODP) AS PERF_TNPRODP_MENSUAL,
+        SUM(PERF_TPARO) AS PERF_TPARO_ANUAL,
+        SUM(PERF_TPARO) AS PERF_TPARO_MENSUAL,
+        SUM(PERF_TPCARTACOL) AS PERF_TPCARTACOL_ANUAL,
+        SUM(PERF_TPCARTACOL) AS PERF_TPCARTACOL_MENSUAL,
+        SUM(PERF_TPDECICOME) AS PERF_TPDECICOME_ANUAL,
+        SUM(PERF_TPDECICOME) AS PERF_TPDECICOME_MENSUAL,
+        SUM(PERF_TPIMASD) AS PERF_TPIMASD_ANUAL,
+        SUM(PERF_TPIMASD) AS PERF_TPIMASD_MENSUAL,
+        SUM(PERF_TPREFORMA) AS PERF_TPREFORMA_ANUAL,
+        SUM(PERF_TPREFORMA) AS PERF_TPREFORMA_MENSUAL,
+        SUM(PERF_TPAROCONOF) AS PERF_TPAROCONOF_ANUAL,
+        SUM(PERF_TPAROCONOF) AS PERF_TPAROCONOF_MENSUAL,
+        SUM(PERF_TPAROPROGR) AS PERF_TPAROPROGR_ANUAL,
+        SUM(PERF_TPAROPROGR) AS PERF_TPAROPROGR_MENSUAL,
+        SUM(PERF_TPESPEURGE) AS PERF_TPESPEURGE_ANUAL,
+        SUM(PERF_TPESPEURGE) AS PERF_TPESPEURGE_MENSUAL,
+        SUM(PERF_TPRESENCIA) AS PERF_TPRESENCIA_ANUAL,
+        SUM(PERF_TPRESENCIA) AS PERF_TPRESENCIA_MENSUAL,
+        SUM(PERF_CONSUMIDO) AS PERF_CONSUMIDO_ANUAL,
+        SUM(PERF_CONSUMIDO) AS PERF_CONSUMIDO_MENSUAL,
+        SUM(PERF_CADENA) AS PERF_CADENA_ANUAL,
+        SUM(PERF_CADENA) AS PERF_CADENA_MENSUAL,
+        SUM(PERF_CAPSUCAMB) AS PERF_CAPSUCAMB_ANUAL,
+        SUM(PERF_CAPSUCAMB) AS PERF_CAPSUCAMB_MENSUAL,
+        SUM(PERF_PRODCAMB) AS PERF_PRODCAMB_ANUAL,
+        SUM(PERF_PRODCAMB) AS PERF_PRODCAMB_MENSUAL,
+        SUM(PERF_NROCAMBC) AS PERF_NROCAMBC_ANUAL,
+        SUM(PERF_NROCAMBC) AS PERF_NROCAMBC_MENSUAL,
+        SUM(PERF_TPOCAMBC) AS PERF_TPOCAMBC_ANUAL,
+        SUM(PERF_TPOCAMBC) AS PERF_TPOCAMBC_MENSUAL,
+        SUM(PERF_TPOREGLC) AS PERF_TPOREGLC_ANUAL,
+        SUM(PERF_TPOREGLC) AS PERF_TPOREGLC_MENSUAL,
+        SUM(PERF_TPOTINTC) AS PERF_TPOTINTC_ANUAL,
+        SUM(PERF_TPOTINTC) AS PERF_TPOTINTC_MENSUAL,
+        SUM(PERF_TPOCAMB) AS PERF_TPOCAMB_ANUAL,
+        SUM(PERF_TPOCAMB) AS PERF_TPOCAMB_MENSUAL,
+        SUM(PERF_TPOREGL) AS PERF_TPOREGL_ANUAL,
+        SUM(PERF_TPOREGL) AS PERF_TPOREGL_MENSUAL,
+        SUM(PERF_TPOTINT) AS PERF_TPOTINT_ANUAL,
+        SUM(PERF_TPOTINT) AS PERF_TPOTINT_MENSUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_PROD_DESP 
+                ELSE NULL
+            END) AS PERF_CONS_DESP_MENSUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_PROD_DESP 
+                ELSE NULL
+            END) AS PERF_PROD_DESP_MENSUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_CONS_DESP 
+                ELSE NULL
+            END) AS PERF_CONS_DESP_ANUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_CONS_DESP 
+                ELSE NULL
+            END) AS PERF_CONS_DESP_MENSUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_CAD_DESP 
+                ELSE NULL
+            END) AS PERF_CAD_DESP_ANUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_CAD_DESP 
+                ELSE NULL
+            END) AS PERF_CAD_DESP_MENSUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_CCAMB_DESP 
+                ELSE NULL
+            END) AS PERF_CCAMB_DESP_ANUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_CCAMB_DESP 
+                ELSE NULL
+            END) AS PERF_CCAMB_DESP_MENSUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_PCAMB_DESP 
+                ELSE NULL
+            END) AS PERF_PCAMB_DESP_ANUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_PCAMB_DESP 
+                ELSE NULL
+            END) AS PERF_PCAMB_DESP_MENSUAL
+    FROM
+        TPROPERF_L
+    WHERE
+        PERF_FECHAJOR > :AnoRupturaBV || '0000'
+        AND PERF_FECHAJOR <= :HastaFechaBV
+    GROUP BY
+        FLOOR(PERF_FECHAJOR / 10000),
+        0,
+        PERF_EMPRESA,
+        PERF_SECCION,
+        PERF_CELULA
+    
+    UNION ALL
+    
+    SELECT
+        TO_NUMBER(TO_CHAR(TO_DATE(PERF_FECHAJOR, 'YYYYMMDD'), 'YYYYMM')) AS PERF_PERIODO,
+        TO_CHAR(TO_DATE(PERF_FECHAJOR, 'YYYYMMDD'), 'MONTH') AS PERF_PERIODO_EDIT,
+        1 AS PERF_TIPO_PERIODO,
+        PERF_EMPRESA,
+        PERF_SECCION,
+        PERF_CELULA,
+        COUNT(DISTINCT PERF_FECHAJOR) AS PERF_FECHAJOR_EDIT,
+        SUM(NULL) AS PERF_PRODUCIDO_ANUAL,
+        SUM(PERF_PRODUCIDO) AS PERF_PRODUCIDO_MENSUAL,
+        SUM(NULL) AS PERF_TPCAMBIO_ANUAL,
+        SUM(PERF_TPCAMBIO) AS PERF_TPCAMBIO_MENSUAL,
+        SUM(NULL) AS PERF_TPLIMPIEZA_ANUAL,
+        SUM(PERF_TPLIMPIEZA) AS PERF_TPLIMPIEZA_MENSUAL,
+        SUM(NULL) AS PERF_TPLIMPIEZAC_ANUAL,
+        SUM(PERF_TPLIMPIEZAC) AS PERF_TPLIMPIEZAC_MENSUAL,
+        SUM(NULL) AS PERF_TPREGLAJE_ANUAL,
+        SUM(PERF_TPREGLAJE) AS PERF_TPREGLAJE_MENSUAL,
+        SUM(NULL) AS PERF_TPTINTAS_ANUAL,
+        SUM(PERF_TPTINTAS) AS PERF_TPTINTAS_MENSUAL,
+        SUM(NULL) AS PERF_TPMATERIAL_ANUAL,
+        SUM(PERF_TPMATERIAL) AS PERF_TPMATERIAL_MENSUAL,
+        SUM(NULL) AS PERF_TPMANTENI_ANUAL,
+        SUM(PERF_TPMANTENI) AS PERF_TPMANTENI_MENSUAL,
+        SUM(NULL) AS PERF_TPMANINTER_ANUAL,
+        SUM(PERF_TPMANINTER) AS PERF_TPMANINTER_MENSUAL,
+        SUM(NULL) AS PERF_TVACIO_ANUAL,
+        SUM(PERF_TVACIO) AS PERF_TVACIO_MENSUAL,
+        SUM(NULL) AS PERF_TPNOATEND_ANUAL,
+        SUM(PERF_TPNOATEND) AS PERF_TPNOATEND_MENSUAL,
+        SUM(NULL) AS PERF_TPSINMOT_ANUAL,
+        SUM(PERF_TPSINMOT) AS PERF_TPSINMOT_MENSUAL,
+        SUM(NULL) AS PERF_TPUTIL_ANUAL,
+        SUM(PERF_TPUTIL) AS PERF_TPUTIL_MENSUAL,
+        SUM(NULL) AS PERF_TBONO_ANUAL,
+        SUM(PERF_TBONO) AS PERF_TBONO_MENSUAL,
+        SUM(NULL) AS PERF_TBOCADILLO_ANUAL,
+        SUM(PERF_TBOCADILLO) AS PERF_TBOCADILLO_MENSUAL,
+        SUM(NULL) AS PERF_PRODEQUIV_ANUAL,
+        SUM(PERF_PRODEQUIV) AS PERF_PRODEQUIV_MENSUAL,
+        SUM(NULL) AS PERF_PRODUCIDO_EDIT_ANUAL,
+        SUM(CASE
+                WHEN PERF_SWPRODTEOR = 'S' THEN PERF_PRODTEOR
+                ELSE PERF_PRODUCIDO
+            END) AS PERF_PRODUCIDO_EDIT_MENSUAL,
+        SUM(NULL) AS PERF_PRODULABO_EDIT_ANUAL,
+        SUM(CASE
+            WHEN PERF_LABORABLE = 'S' AND (PERF_PRODUCIDO != 0 OR (PERF_TBONO + PERF_TMUESTRAS) != PERF_TBOCADILLO) THEN
+                CASE
+                    WHEN PERF_SWPRODTEOR = 'S' THEN PERF_PRODTEOR
+                    ELSE PERF_PRODUCIDO
+                END
+            ELSE 0
+        END) AS PERF_PRODULABO_EDIT_MENSUAL,
+        SUM(NULL) AS PERF_TDESCANSO_ANUAL,
+        SUM(PERF_TDESCANSO) AS PERF_TDESCANSO_MENSUAL,
+        SUM(NULL) AS PERF_TMOD_ANUAL,
+        SUM(PERF_TMOD) AS PERF_TMOD_MENSUAL,
+        SUM(NULL) AS PERF_TMUESTRAS_ANUAL,
+        SUM(PERF_TMUESTRAS) AS PERF_TMUESTRAS_MENSUAL,
+        SUM(NULL) AS PERF_TNECESPERS_ANUAL,
+        SUM(PERF_TNECESPERS) AS PERF_TNECESPERS_MENSUAL,
+        SUM(NULL) AS PERF_TNOCONTROL_ANUAL,
+        SUM(PERF_TNOCONTROL) AS PERF_TNOCONTROL_MENSUAL,
+        SUM(NULL) AS PERF_TNOIMPUT_ANUAL,
+        SUM(PERF_TNOIMPUT) AS PERF_TNOIMPUT_MENSUAL,
+        SUM(NULL) AS PERF_TNPRODNP_ANUAL,
+        SUM(PERF_TNPRODNP) AS PERF_TNPRODNP_MENSUAL,
+        SUM(NULL) AS PERF_TNPRODP_ANUAL,
+        SUM(PERF_TNPRODP) AS PERF_TNPRODP_MENSUAL,
+        SUM(NULL) AS PERF_TPARO_ANUAL,
+        SUM(PERF_TPARO) AS PERF_TPARO_MENSUAL,
+        SUM(NULL) AS PERF_TPCARTACOL_ANUAL,
+        SUM(PERF_TPCARTACOL) AS PERF_TPCARTACOL_MENSUAL,
+        SUM(NULL) AS PERF_TPDECICOME_ANUAL,
+        SUM(PERF_TPDECICOME) AS PERF_TPDECICOME_MENSUAL,
+        SUM(NULL) AS PERF_TPIMASD_ANUAL,
+        SUM(PERF_TPIMASD) AS PERF_TPIMASD_MENSUAL,
+        SUM(NULL) AS PERF_TPREFORMA_ANUAL,
+        SUM(PERF_TPREFORMA) AS PERF_TPREFORMA_MENSUAL,
+        SUM(NULL) AS PERF_TPAROCONOF_ANUAL,
+        SUM(PERF_TPAROCONOF) AS PERF_TPAROCONOF_MENSUAL,
+        SUM(NULL) AS PERF_TPAROPROGR_ANUAL,
+        SUM(PERF_TPAROPROGR) AS PERF_TPAROPROGR_MENSUAL,
+        SUM(NULL) AS PERF_TPESPEURGE_ANUAL,
+        SUM(PERF_TPESPEURGE) AS PERF_TPESPEURGE_MENSUAL,
+        SUM(NULL) AS PERF_TPRESENCIA_ANUAL,
+        SUM(PERF_TPRESENCIA) AS PERF_TPRESENCIA_MENSUAL,
+        SUM(NULL) AS PERF_CONSUMIDO_ANUAL,
+        SUM(PERF_CONSUMIDO) AS PERF_CONSUMIDO_MENSUAL,
+        SUM(NULL) AS PERF_CADENA_ANUAL,
+        SUM(PERF_CADENA) AS PERF_CADENA_MENSUAL,
+        SUM(NULL) AS PERF_CAPSUCAMB_ANUAL,
+        SUM(PERF_CAPSUCAMB) AS PERF_CAPSUCAMB_MENSUAL,
+        SUM(NULL) AS PERF_PRODCAMB_ANUAL,
+        SUM(PERF_PRODCAMB) AS PERF_PRODCAMB_MENSUAL,
+        SUM(NULL) AS PERF_NROCAMBC_ANUAL,
+        SUM(PERF_NROCAMBC) AS PERF_NROCAMBC_MENSUAL,
+        SUM(NULL) AS PERF_TPOCAMBC_ANUAL,
+        SUM(PERF_TPOCAMBC) AS PERF_TPOCAMBC_MENSUAL,
+        SUM(NULL) AS PERF_TPOREGLC_ANUAL,
+        SUM(PERF_TPOREGLC) AS PERF_TPOREGLC_MENSUAL,
+        SUM(NULL) AS PERF_TPOTINTC_ANUAL,
+        SUM(PERF_TPOTINTC) AS PERF_TPOTINTC_MENSUAL,
+        SUM(NULL) AS PERF_TPOCAMB_ANUAL,
+        SUM(PERF_TPOCAMB) AS PERF_TPOCAMB_MENSUAL,
+        SUM(NULL) AS PERF_TPOREGL_ANUAL,
+        SUM(PERF_TPOREGL) AS PERF_TPOREGL_MENSUAL,
+        SUM(NULL) AS PERF_TPOTINT_ANUAL,
+        SUM(PERF_TPOTINT) AS PERF_TPOTINT_MENSUAL,
+        SUM(NULL) AS PERF_PROD_DESP_MENSUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_PROD_DESP 
+                ELSE NULL
+            END) AS PERF_PROD_DESP_MENSUAL,
+        SUM(NULL) AS PERF_CONS_DESP_ANUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_CONS_DESP 
+                ELSE NULL
+            END) AS PERF_CONS_DESP_MENSUAL,
+        SUM(NULL) AS PERF_CAD_DESP_ANUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_CAD_DESP 
+                ELSE NULL
+            END) AS PERF_CAD_DESP_MENSUAL,
+        SUM(NULL) AS PERF_CCAMB_DESP_ANUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_CCAMB_DESP 
+                ELSE NULL
+            END) AS PERF_CCAMB_DESP_MENSUAL,
+        SUM(NULL) AS PERF_PCAMB_DESP_ANUAL,
+        SUM(CASE
+                WHEN (PERF_CONS_DESP - PERF_CAD_DESP) != 0 THEN PERF_PCAMB_DESP 
+                ELSE NULL
+            END) AS PERF_PCAMB_DESP_MENSUAL
+    FROM
+        TPROPERF_L
+    WHERE
+        PERF_FECHAJOR > :AnoRupturaBV || '0000'
+        AND PERF_FECHAJOR <= :HastaFechaBV
+    GROUP BY
+        TO_NUMBER(TO_CHAR(TO_DATE(PERF_FECHAJOR, 'YYYYMMDD'), 'YYYYMM')),
+        TO_CHAR(TO_DATE(PERF_FECHAJOR, 'YYYYMMDD'), 'MONTH'),
+        1,
+        PERF_EMPRESA,
+        PERF_SECCION,
+        PERF_CELULA
+    )
+WHERE
+    PERF_EMPRESA = NVL(:PerfEmpresaBV, PERF_EMPRESA)
+    AND PERF_SECCION = NVL(:PerfSeccionBV, PERF_SECCION)
+    AND PERF_CELULA = NVL(:PerfCelulaBV, PERF_CELULA)
+GROUP BY PERF_PERIODO, PERF_PERIODO_EDIT, PERF_TIPO_PERIODO, PERF_EMPRESA, PERF_SECCION]]>
+  </SQLQuery>
+  <ViewAttribute
+    Name="PerfPeriodo"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    AliasName="PERF_PERIODO"
+    Expression="PERF_PERIODO"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="39"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="PerfPeriodoEdit"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="40"
+    Type="java.lang.String"
+    ColumnType="VARCHAR2"
+    AliasName="PERF_PERIODO_EDIT"
+    Expression="PERF_PERIODO_EDIT"
+    SQLType="VARCHAR">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="40"/>
+    </DesignTime>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.performance.modelOracle.views.PerformanceVO.PerfPeriodoEdit_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="PerfTipoPeriodo"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    AliasName="PERF_TIPO_PERIODO"
+    Expression="PERF_TIPO_PERIODO"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="7"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="PerfEmpresa"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="6"
+    Scale="0"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    AliasName="PERF_EMPRESA"
+    Expression="PERF_EMPRESA"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="7"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="PerfSeccion"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="6"
+    Scale="0"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    AliasName="PERF_SECCION"
+    Expression="PERF_SECCION"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="7"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="PerfCelula"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    AliasName="PERF_CELULA"
+    Expression="PERF_CELULA"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="39"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="PerfDatoAnual"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    AliasName="PERF_DATO_ANUAL"
+    Expression="PERF_DATO_ANUAL"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="39"/>
+    </DesignTime>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.performance.modelOracle.views.PerformanceVO.PerfDatoAnual_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="PerfDatoMensual"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    AliasName="PERF_DATO_MENSUAL"
+    Expression="PERF_DATO_MENSUAL"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="39"/>
+    </DesignTime>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.performance.modelOracle.views.PerformanceVO.PerfDatoMensual_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <AttrArray Name="KeyAttributes">
+    <Item Value="PerfPeriodo"/>
+    <Item Value="PerfEmpresa"/>
+    <Item Value="PerfSeccion"/>
+    <Item Value="PerfCelula"/>
+  </AttrArray>
+  <ClientInterface>
+    <Method
+      Name="setQuerySQL">
+      <Return
+        Type="void"/>
+      <Parameter
+        Name="querySQL"
+        Type="java.lang.String"/>
+    </Method>
+    <Method
+      Name="getQuerySQL">
+      <Return
+        Type="java.lang.String"/>
+    </Method>
+    <Method
+      Name="setCamposAnualMensualBD">
+      <Return
+        Type="void"/>
+    </Method>
+    <Method
+      Name="executeWithParamsEdit">
+      <Return
+        Type="void"/>
+      <Parameter
+        Name="seccion"
+        Type="java.math.BigDecimal"/>
+      <Parameter
+        Name="celula"
+        Type="java.math.BigDecimal"/>
+      <Parameter
+        Name="celulaAgrup"
+        Type="java.lang.Integer"/>
+      <Parameter
+        Name="celulasExcepcion"
+        Type="java.util.ArrayList"/>
+      <Parameter
+        Name="anoRuptura"
+        Type="java.lang.Integer"/>
+      <Parameter
+        Name="anosHistorico"
+        Type="java.lang.Integer"/>
+      <Parameter
+        Name="hastaFecha"
+        Type="java.lang.Integer"/>
+    </Method>
+  </ClientInterface>
+  <ResourceBundle>
+    <PropertiesBundle
+      PropertiesFile="es.ramondin.performance.modelOracle.resources.ModelOracleBundle"/>
+  </ResourceBundle>
+</ViewObject>

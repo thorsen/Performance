@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clientRegistry version="11.1.1.7.0.6882" xmlns="http://xmlns.oracle.com/adf/desktopintegration">
+  <client type="Excel">
+    <id>6d645a6f-1f9a-4194-b479-c23dcf3de8e0</id>
+    <metadata>
+      <hashValue>2D6579DADE9430BD46F51492A853D833121299CB660C30238AB5C3C723530F08</hashValue>
+    </metadata>
+  </client>
+  <client type="Excel">
+    <id>3827f4a1-f5f2-489c-9425-f7e7e79751d2</id>
+    <metadata>
+      <hashValue>23B0B0F51A30B12D3D13A9ADB43B1667DBECFECA3C6DFFCF46A9389BC518F83D</hashValue>
+    </metadata>
+  </client>
+</clientRegistry>

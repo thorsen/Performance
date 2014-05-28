@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1" xmlns:f="http://java.sun.com/jsf/core" xmlns:af="http://xmlns.oracle.com/adf/faces/rich"
+          xmlns:ExportarExcel="/ExportarExcelLib">
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+  <f:view>
+    <af:document id="d1" title="Cuadro de Mando">
+      <af:messages id="m1"/>
+      <af:form id="f1">
+        <af:panelGroupLayout layout="vertical" xmlns:af="http://xmlns.oracle.com/adf/faces/rich" id="pgl2">
+          <!--<af:table value="#{bindings.AuxPlanAproVO1.collectionModel}" var="row" rows="#{bindings.AuxPlanAproVO1.rangeSize}"
+                        emptyText="#{bindings.AuxPlanAproVO1.viewable ? 'No data to display.' : 'Access Denied.'}"
+                        fetchSize="#{bindings.AuxPlanAproVO1.rangeSize}" rowBandingInterval="0" id="t1">
+                <af:column sortProperty="#{bindings.AuxPlanAproVO1.hints.Fecha.name}" sortable="true" headerText="#{bindings.AuxPlanAproVO1.hints.Fecha.label}"
+                           id="c1">
+                  <af:outputText value="#{row.Fecha}" id="ot3">
+                    <af:convertDateTime pattern="#{bindings.AuxPlanAproVO1.hints.Fecha.format}"/>
+                  </af:outputText>
+                </af:column>
+                <af:column sortProperty="#{bindings.AuxPlanAproVO1.hints.Exis.name}" sortable="true" headerText="#{bindings.AuxPlanAproVO1.hints.Exis.label}"
+                           id="c3" inlineStyle="background-color:#{row.ColorExis};">
+                  <af:outputText value="#{row.Exis}" id="ot2"/>
+                </af:column>
+                <af:column sortProperty="#{bindings.AuxPlanAproVO1.hints.Disponible.name}" sortable="true"
+                           headerText="#{bindings.AuxPlanAproVO1.hints.Disponible.label}" id="c2" inlineStyle="background-color:#{row.ColorDisponible};">
+                  <af:outputText value="#{row.Disponible}" id="ot1"/>
+                </af:column>
+              </af:table>-->
+          <af:table summary="Cuadro de mando" value="#{bindings.Performance.collectionModel}" var="row" rows="#{bindings.Performance.rangeSize}"
+                    emptyText="#{bindings.Performance.viewable ? 'No data to display.' : 'Access Denied.'}" fetchSize="#{bindings.Performance.rangeSize}"
+                    rowBandingInterval="0" varStatus="vs" id="t1" binding="#{CuadroMandoBean.tabla}">
+            <af:column sortProperty="#{bindings.Performance.hints.PerfPeriodo.name}" filterable="true" sortable="true"
+                       headerText="#{bindings.Performance.hints.PerfPeriodo.label}" id="c1">
+              <af:outputText value="#{row.PerfPeriodo}" id="ot5">
+                <af:convertNumber groupingUsed="false" pattern="#{bindings.Performance.hints.PerfPeriodo.format}"/>
+              </af:outputText>
+            </af:column>
+            <af:column rowHeader="true" sortProperty="#{bindings.Performance.hints.PerfPeriodoEdit.name}" filterable="true" sortable="true"
+                       headerText="#{bindings.Performance.hints.PerfPeriodoEdit.label}" id="c5">
+              <af:outputText value="#{row.PerfPeriodoEdit}" id="ot8"/>
+            </af:column>
+            <af:column sortProperty="#{bindings.Performance.hints.PerfTipoPeriodo.name}" filterable="true" sortable="true"
+                       headerText="#{bindings.Performance.hints.PerfTipoPeriodo.label}" id="c8">
+              <af:outputText value="#{row.PerfTipoPeriodo}" id="ot1">
+                <af:convertNumber groupingUsed="false" pattern="#{bindings.Performance.hints.PerfTipoPeriodo.format}"/>
+              </af:outputText>
+            </af:column>
+            <af:column sortProperty="#{bindings.Performance.hints.PerfEmpresa.name}" filterable="true" sortable="true"
+                       headerText="#{bindings.Performance.hints.PerfEmpresa.label}" id="c3">
+              <af:outputText value="#{row.PerfEmpresa}" id="ot4">
+                <af:convertNumber groupingUsed="false" pattern="#{bindings.Performance.hints.PerfEmpresa.format}"/>
+              </af:outputText>
+            </af:column>
+            <af:column sortProperty="#{bindings.Performance.hints.PerfSeccion.name}" filterable="true" sortable="true"
+                       headerText="#{bindings.Performance.hints.PerfSeccion.label}" id="c4">
+              <af:outputText value="#{row.PerfSeccion}" id="ot7">
+                <af:convertNumber groupingUsed="false" pattern="#{bindings.Performance.hints.PerfSeccion.format}"/>
+              </af:outputText>
+            </af:column>
+            <af:column sortProperty="#{bindings.Performance.hints.PerfCelula.name}" filterable="true" sortable="true"
+                       headerText="#{bindings.Performance.hints.PerfCelula.label}" id="c7">
+              <af:outputText value="#{row.PerfCelula}" id="ot3">
+                <af:convertNumber groupingUsed="false" pattern="#{bindings.Performance.hints.PerfCelula.format}"/>
+              </af:outputText>
+            </af:column>
+            <af:column sortProperty="#{bindings.Performance.hints.PerfDatoAnual.name}" filterable="true" sortable="true"
+                       headerText="#{bindings.Performance.hints.PerfDatoAnual.label}" id="c6">
+              <af:outputText value="#{row.PerfDatoAnual}" id="ot2">
+                <af:convertNumber groupingUsed="false" pattern="#{bindings.Performance.hints.PerfDatoAnual.format}"/>
+              </af:outputText>
+            </af:column>
+            <af:column sortProperty="#{bindings.Performance.hints.PerfDatoMensual.name}" filterable="true" sortable="true"
+                       headerText="#{bindings.Performance.hints.PerfDatoMensual.label}" id="c2">
+              <af:outputText value="#{row.PerfDatoMensual}" id="ot6">
+                <af:convertNumber groupingUsed="false" pattern="#{bindings.Performance.hints.PerfDatoMensual.format}"/>
+              </af:outputText>
+            </af:column>
+          </af:table>
+          <ExportarExcel:CompDecExportarExcel id="cdee1" idTabla="t1" nombreHoja="#{CuadroMandoBean.summaryTabla}"/>
+        </af:panelGroupLayout>
+      </af:form>
+    </af:document>
+  </f:view>
+</jsp:root>
