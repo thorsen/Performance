@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pageDefinition xmlns="http://xmlns.oracle.com/adfm/uimodel" version="11.1.1.64.93" id="pruebaMantExcelPageDef" Package="es.ramondin.performance.view.pageDefs">
+  <parameters/>
+  <executables>
+    <variableIterator id="variables"/>
+    <iterator Binds="ParametroUpdate" RangeSize="25" DataControl="PerformanceOracleAMDataControl" id="ParametroUpdateIterator"/>
+  </executables>
+  <bindings>
+    <tree IterBinding="ParametroUpdateIterator" id="ParametroUpdate">
+      <nodeDefinition DefName="es.ramondin.performance.modelOracle.views.ParametroUpdateVO" Name="ParametroUpdate0">
+        <AttrNames>
+          <Item Value="Param"/>
+          <Item Value="Valor"/>
+          <Item Value="Empresa"/>
+          <Item Value="Descripcion"/>
+        </AttrNames>
+      </nodeDefinition>
+    </tree>
+    <action IterBinding="ParametroUpdateIterator" id="CreateInsert" InstanceName="PerformanceOracleAMDataControl.ParametroUpdate"
+            DataControl="PerformanceOracleAMDataControl" RequiresUpdateModel="true" Action="createInsertRow"/>
+    <action IterBinding="ParametroUpdateIterator" id="Delete" InstanceName="PerformanceOracleAMDataControl.ParametroUpdate"
+            DataControl="PerformanceOracleAMDataControl" RequiresUpdateModel="false" Action="removeCurrentRow"/>
+    <action IterBinding="ParametroUpdateIterator" id="Execute" InstanceName="PerformanceOracleAMDataControl.ParametroUpdate"
+            DataControl="PerformanceOracleAMDataControl" RequiresUpdateModel="true" Action="iteratorExecute"/>
+    <action id="Commit" DataControl="PerformanceOracleAMDataControl" RequiresUpdateModel="true" Action="commitTransaction"/>
+    <action id="Rollback" DataControl="PerformanceOracleAMDataControl" RequiresUpdateModel="false" Action="rollbackTransaction"/>
+  </bindings>
+</pageDefinition>

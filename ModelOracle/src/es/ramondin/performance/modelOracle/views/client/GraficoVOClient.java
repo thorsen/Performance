@@ -38,4 +38,14 @@ public class GraficoVOClient extends ViewUsageImpl implements GraficoVO {
         Object _ret = getApplicationModuleProxy().riInvokeExportedMethod(this,"getMaxDecimales",null,null);
         return (Number)_ret;
     }
+
+    public Number getSentidoMejor() {
+        Object _ret = getApplicationModuleProxy().riInvokeExportedMethod(this,"getSentidoMejor",null,null);
+        return (Number)_ret;
+    }
+
+    public String getTituloEjeY() {
+        Object _ret = getApplicationModuleProxy().riInvokeExportedMethod(this,"getTituloEjeY",null,null);
+        return (String)_ret;
+    }
 }

@@ -181,6 +181,22 @@
                      <hash n="filters">
                         <list n="rules">
                            <hash>
+                              <value n="pattern" v="adflibUtilGeneral.jar"/>
+                              <value n="type" v="1"/>
+                           </hash>
+                           <hash>
+                              <value n="pattern" v="adflibCompDecMosaico.jar"/>
+                              <value n="type" v="1"/>
+                           </hash>
+                           <hash>
+                              <value n="pattern" v="adflibCompDecExportarExcel.jar"/>
+                              <value n="type" v="1"/>
+                           </hash>
+                           <hash>
+                              <value n="pattern" v="adflibCompDecGrafico.jar"/>
+                              <value n="type" v="1"/>
+                           </hash>
+                           <hash>
                               <value n="pattern" v="**"/>
                            </hash>
                         </list>
@@ -294,10 +310,6 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="ADF Library"/>
-            <value n="isJDK" v="false"/>
-         </hash>
-         <hash>
             <value n="id" v="ADF Common Web Runtime"/>
             <value n="isJDK" v="false"/>
          </hash>
@@ -342,6 +354,14 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
+            <value n="id" v="JSTL 1.2 Tags"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="ADF Library"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
             <value n="id" v="Oracle XML Parser v2"/>
             <value n="isJDK" v="false"/>
          </hash>
@@ -373,24 +393,9 @@
             <value n="id" v="BC4J Oracle Domains"/>
             <value n="isJDK" v="false"/>
          </hash>
-         <hash>
-            <value n="id" v="JSTL 1.2 Tags"/>
-            <value n="isJDK" v="false"/>
-         </hash>
       </list>
       <hash n="internalDefinitions">
          <list n="libraryDefinitions">
-            <hash>
-               <list n="classPath">
-                  <url path="../../GestorArchivos/ViewController/deploy/adflibGestorArchivos.jar" jar-entry=""/>
-                  <url path="../../CompDecGrafico/ViewController/deploy/adflibCompDecGrafico.jar" jar-entry=""/>
-                  <url path="../../CompDecExportarExcel/ViewController/deploy/adflibCompDecExportarExcel.jar" jar-entry=""/>
-                  <url path="../../UtilGeneral/UtilGeneral/deploy/adflibUtilGeneral.jar" jar-entry=""/>
-               </list>
-               <value n="deployedByDefault" v="true"/>
-               <value n="description" v="ADF Library"/>
-               <value n="id" v="ADF Library"/>
-            </hash>
             <hash>
                <list n="classPath">
                   <url path="../../CompDecGrafico/ViewController/deploy/adflibCompDecGrafico.jar" jar-entry=""/>
@@ -400,24 +405,10 @@
             </hash>
             <hash>
                <list n="classPath">
-                  <url path="../../CompDecGrafico/ViewController/deploy/adflibCompDecGrafico.jar" jar-entry=""/>
+                  <url path="../../CompDecExportarExcel/ViewController/deploy/adflibCompDecExportarExcel.jar" jar-entry=""/>
                </list>
                <value n="description" v="Library2"/>
                <value n="id" v="Library2"/>
-            </hash>
-            <hash>
-               <list n="classPath">
-                  <url path="../../CompDecGrafico/ViewController/deploy/adflibCompDecGrafico.jar" jar-entry=""/>
-               </list>
-               <value n="description" v="Library3"/>
-               <value n="id" v="Library3"/>
-            </hash>
-            <hash>
-               <list n="classPath">
-                  <url path="../../CompDecExportarExcel/ViewController/deploy/adflibCompDecExportarExcel.jar" jar-entry=""/>
-               </list>
-               <value n="description" v="Library4"/>
-               <value n="id" v="Library4"/>
             </hash>
             <hash>
                <list n="classPath">
@@ -427,6 +418,46 @@
                <value n="description" v="UtilidadesRamondin.jar"/>
                <value n="id" v="UtilidadesRamondin.jar"/>
                <value n="locked" v="true"/>
+            </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="../../CompDecExportarExcel/ViewController/deploy/adflibCompDecExportarExcel.jar" jar-entry=""/>
+                  <url path="../../GestorArchivos/ViewController/deploy/adflibGestorArchivos.jar" jar-entry=""/>
+                  <url path="../../UtilGeneral/UtilGeneral/deploy/adflibUtilGeneral.jar" jar-entry=""/>
+                  <url path="../../CompDecMosaico/ViewController/deploy/adflibCompDecMosaico.jar" jar-entry=""/>
+                  <url path="../../CompDecGrafico/ViewController/deploy/adflibCompDecGrafico.jar" jar-entry=""/>
+               </list>
+               <value n="deployedByDefault" v="true"/>
+               <value n="description" v="ADF Library"/>
+               <value n="id" v="ADF Library"/>
+            </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="../../CompDecExportarExcel/ViewController/deploy/adflibCompDecExportarExcel.jar" jar-entry=""/>
+               </list>
+               <value n="description" v="Library3"/>
+               <value n="id" v="Library3"/>
+            </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="../../CompDecGrafico/ViewController/deploy/adflibCompDecGrafico.jar" jar-entry=""/>
+               </list>
+               <value n="description" v="Library4"/>
+               <value n="id" v="Library4"/>
+            </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="../../CompDecMosaico/ViewController/deploy/adflibCompDecMosaico.jar" jar-entry=""/>
+               </list>
+               <value n="description" v="Library5"/>
+               <value n="id" v="Library5"/>
+            </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="../../CompDecGrafico/ViewController/deploy/adflibCompDecGrafico.jar" jar-entry=""/>
+               </list>
+               <value n="description" v="Library6"/>
+               <value n="id" v="Library6"/>
             </hash>
          </list>
       </hash>
@@ -504,10 +535,6 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="ADF Library"/>
-            <value n="isJDK" v="false"/>
-         </hash>
-         <hash>
             <value n="id" v="ADF Common Web Runtime"/>
             <value n="isJDK" v="false"/>
          </hash>
@@ -540,10 +567,6 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <url n="id" path="ADF_Library_Dependencies.library"/>
-            <value n="isJDK" v="false"/>
-         </hash>
-         <hash>
             <value n="id" v="Java Cache"/>
             <value n="isJDK" v="false"/>
          </hash>
@@ -553,6 +576,18 @@
          </hash>
          <hash>
             <value n="id" v="ADF Desktop Integration Runtime"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="JSTL 1.2 Tags"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="ADF Library"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <url n="id" path="ADF_Library_Dependencies.library"/>
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
@@ -587,14 +622,27 @@
             <value n="id" v="BC4J Oracle Domains"/>
             <value n="isJDK" v="false"/>
          </hash>
-         <hash>
-            <value n="id" v="JSTL 1.2 Tags"/>
-            <value n="isJDK" v="false"/>
-         </hash>
       </list>
    </hash>
    <hash n="oracle.jdevimpl.config.JProjectPaths">
       <url n="outputDirectory" path="classes/"/>
+   </hash>
+   <hash n="oracle.jdevimpl.webapp.jsp.JspVeProjectSettings">
+      <list n="filters">
+         <string v="trinidad"/>
+      </list>
+      <list n="servlet_listeners">
+         <string v="com.sun.faces.config.ConfigureListener"/>
+      </list>
+      <list n="servlet_listeners_unselected">
+         <string v="oracle.adf.mbean.share.connection.ADFConnectionLifeCycleCallBack"/>
+         <string v="oracle.adf.mbean.share.config.ADFConfigLifeCycleCallBack"/>
+         <string v="oracle.bc4j.mbean.BC4JConfigLifeCycleCallBack"/>
+      </list>
+      <list n="servlets">
+         <string v="Faces Servlet"/>
+         <string v="resources"/>
+      </list>
    </hash>
    <hash n="oracle.jdevimpl.webapp.jsp.libraries.model.ProjectTagLibraries">
       <list n="tag-libraries">
@@ -641,28 +689,6 @@
             <value n="tldURL" v="@oracle.home@../oracle_common/modules/oracle.adf.view_11.1.1/dvt-faces.jar!/META-INF/bi.tld"/>
             <value n="URI" v="http://xmlns.oracle.com/dss/adf/faces"/>
             <value n="version" v="1.1"/>
-         </hash>
-         <hash>
-            <value n="jspVersion" v="2.1"/>
-            <value n="libraries" v="Grafico 1.0 Tag Libraries"/>
-            <value n="name" v="Grafico"/>
-            <value n="prefix" v="Grafico"/>
-            <value n="runInEditor" v="true"/>
-            <value n="showInPalette" v="true"/>
-            <value n="tldURL" v="@project@../../CompDecGrafico/ViewController/deploy/adflibCompDecGrafico.jar!/META-INF/Grafico.tld"/>
-            <value n="URI" v="/GraficoLib"/>
-            <value n="version" v="1.0"/>
-         </hash>
-         <hash>
-            <value n="jspVersion" v="2.1"/>
-            <value n="libraries" v="ExportarExcel 1.0 Tag Libraries"/>
-            <value n="name" v="ExportarExcel"/>
-            <value n="prefix" v="ExportarExcel"/>
-            <value n="runInEditor" v="true"/>
-            <value n="showInPalette" v="true"/>
-            <value n="tldURL" v="@project@../../CompDecExportarExcel/ViewController/deploy/adflibCompDecExportarExcel.jar!/META-INF/ExportarExcel.tld"/>
-            <value n="URI" v="/ExportarExcelLib"/>
-            <value n="version" v="1.0"/>
          </hash>
          <hash>
             <hash n="baseLibrary">
@@ -741,6 +767,39 @@
             <value n="tldURL" v="@oracle.home@../modules/glassfish.jstl_1.2.0.1.jar!/META-INF/scriptfree.tld"/>
             <value n="URI" v="http://jakarta.apache.org/taglibs/standard/scriptfree"/>
             <value n="version" v="1.2"/>
+         </hash>
+         <hash>
+            <value n="jspVersion" v="2.1"/>
+            <value n="libraries" v="ExportarExcel 1.0 Tag Libraries"/>
+            <value n="name" v="ExportarExcel"/>
+            <value n="prefix" v="ExportarExcel"/>
+            <value n="runInEditor" v="true"/>
+            <value n="showInPalette" v="true"/>
+            <value n="tldURL" v="@project@../../CompDecExportarExcel/ViewController/deploy/adflibCompDecExportarExcel.jar!/META-INF/ExportarExcel.tld"/>
+            <value n="URI" v="/ExportarExcelLib"/>
+            <value n="version" v="1.0"/>
+         </hash>
+         <hash>
+            <value n="jspVersion" v="2.1"/>
+            <value n="libraries" v="Mosaico 1.0 Tag Libraries"/>
+            <value n="name" v="Mosaico"/>
+            <value n="prefix" v="Mosaico"/>
+            <value n="runInEditor" v="true"/>
+            <value n="showInPalette" v="true"/>
+            <value n="tldURL" v="@project@../../CompDecMosaico/ViewController/deploy/adflibCompDecMosaico.jar!/META-INF/Mosaico.tld"/>
+            <value n="URI" v="/MosaicoLib"/>
+            <value n="version" v="1.0"/>
+         </hash>
+         <hash>
+            <value n="jspVersion" v="2.1"/>
+            <value n="libraries" v="Grafico 1.0 Tag Libraries"/>
+            <value n="name" v="Grafico"/>
+            <value n="prefix" v="Grafico"/>
+            <value n="runInEditor" v="true"/>
+            <value n="showInPalette" v="true"/>
+            <value n="tldURL" v="@project@../../CompDecGrafico/ViewController/deploy/adflibCompDecGrafico.jar!/META-INF/Grafico.tld"/>
+            <value n="URI" v="/GraficoLib"/>
+            <value n="version" v="1.0"/>
          </hash>
       </list>
    </hash>

@@ -35,6 +35,26 @@ public class MarkerVORowImpl extends ViewRowImpl {
             }
         }
         ,
+        MmarIdSeccion {
+            public Object get(MarkerVORowImpl obj) {
+                return obj.getMmarIdSeccion();
+            }
+
+            public void put(MarkerVORowImpl obj, Object value) {
+                obj.setMmarIdSeccion((Number)value);
+            }
+        }
+        ,
+        MmarIdCelula {
+            public Object get(MarkerVORowImpl obj) {
+                return obj.getMmarIdCelula();
+            }
+
+            public void put(MarkerVORowImpl obj, Object value) {
+                obj.setMmarIdCelula((Number)value);
+            }
+        }
+        ,
         MmarDesdeFecha {
             public Object get(MarkerVORowImpl obj) {
                 return obj.getMmarDesdeFecha();
@@ -45,13 +65,13 @@ public class MarkerVORowImpl extends ViewRowImpl {
             }
         }
         ,
-        MmarMejoraMant {
+        MmarTipoMarker {
             public Object get(MarkerVORowImpl obj) {
-                return obj.getMmarMejoraMant();
+                return obj.getMmarTipoMarker();
             }
 
             public void put(MarkerVORowImpl obj, Object value) {
-                obj.setMmarMejoraMant((String)value);
+                obj.setMmarTipoMarker((String)value);
             }
         }
         ,
@@ -75,13 +95,23 @@ public class MarkerVORowImpl extends ViewRowImpl {
             }
         }
         ,
-        MmarSentidoMejor {
+        MmarTexto {
             public Object get(MarkerVORowImpl obj) {
-                return obj.getMmarSentidoMejor();
+                return obj.getMmarTexto();
             }
 
             public void put(MarkerVORowImpl obj, Object value) {
-                obj.setMmarSentidoMejor((Number)value);
+                obj.setMmarTexto((String)value);
+            }
+        }
+        ,
+        MmarColor {
+            public Object get(MarkerVORowImpl obj) {
+                return obj.getMmarColor();
+            }
+
+            public void put(MarkerVORowImpl obj, Object value) {
+                obj.setMmarColor((String)value);
             }
         }
         ;
@@ -115,11 +145,14 @@ public class MarkerVORowImpl extends ViewRowImpl {
 
     public static final int MMARIDTIPOGRA = AttributesEnum.MmarIdTipoGra.index();
     public static final int MMARIDGRA = AttributesEnum.MmarIdGra.index();
+    public static final int MMARIDSECCION = AttributesEnum.MmarIdSeccion.index();
+    public static final int MMARIDCELULA = AttributesEnum.MmarIdCelula.index();
     public static final int MMARDESDEFECHA = AttributesEnum.MmarDesdeFecha.index();
-    public static final int MMARMEJORAMANT = AttributesEnum.MmarMejoraMant.index();
+    public static final int MMARTIPOMARKER = AttributesEnum.MmarTipoMarker.index();
     public static final int MMARVALORNORMA = AttributesEnum.MmarValorNorma.index();
     public static final int MMARSIGMA = AttributesEnum.MmarSigma.index();
-    public static final int MMARSENTIDOMEJOR = AttributesEnum.MmarSentidoMejor.index();
+    public static final int MMARTEXTO = AttributesEnum.MmarTexto.index();
+    public static final int MMARCOLOR = AttributesEnum.MmarColor.index();
 
     /**
      * This is the default constructor (do not remove).
@@ -160,6 +193,38 @@ public class MarkerVORowImpl extends ViewRowImpl {
     }
 
     /**
+     * Gets the attribute value for the calculated attribute MmarIdSeccion.
+     * @return the MmarIdSeccion
+     */
+    public Number getMmarIdSeccion() {
+        return (Number) getAttributeInternal(MMARIDSECCION);
+    }
+
+    /**
+     * Sets <code>value</code> as the attribute value for the calculated attribute MmarIdSeccion.
+     * @param value value to set the  MmarIdSeccion
+     */
+    public void setMmarIdSeccion(Number value) {
+        setAttributeInternal(MMARIDSECCION, value);
+    }
+
+    /**
+     * Gets the attribute value for the calculated attribute MmarIdCelula.
+     * @return the MmarIdCelula
+     */
+    public Number getMmarIdCelula() {
+        return (Number) getAttributeInternal(MMARIDCELULA);
+    }
+
+    /**
+     * Sets <code>value</code> as the attribute value for the calculated attribute MmarIdCelula.
+     * @param value value to set the  MmarIdCelula
+     */
+    public void setMmarIdCelula(Number value) {
+        setAttributeInternal(MMARIDCELULA, value);
+    }
+
+    /**
      * Gets the attribute value for the calculated attribute MmarDesdeFecha.
      * @return the MmarDesdeFecha
      */
@@ -175,20 +240,21 @@ public class MarkerVORowImpl extends ViewRowImpl {
         setAttributeInternal(MMARDESDEFECHA, value);
     }
 
+
     /**
-     * Gets the attribute value for the calculated attribute MmarMejoraMant.
-     * @return the MmarMejoraMant
+     * Gets the attribute value for the calculated attribute MmarTipoMarker.
+     * @return the MmarTipoMarker
      */
-    public String getMmarMejoraMant() {
-        return (String) getAttributeInternal(MMARMEJORAMANT);
+    public String getMmarTipoMarker() {
+        return (String) getAttributeInternal(MMARTIPOMARKER);
     }
 
     /**
-     * Sets <code>value</code> as the attribute value for the calculated attribute MmarMejoraMant.
-     * @param value value to set the  MmarMejoraMant
+     * Sets <code>value</code> as the attribute value for the calculated attribute MmarTipoMarker.
+     * @param value value to set the  MmarTipoMarker
      */
-    public void setMmarMejoraMant(String value) {
-        setAttributeInternal(MMARMEJORAMANT, value);
+    public void setMmarTipoMarker(String value) {
+        setAttributeInternal(MMARTIPOMARKER, value);
     }
 
     /**
@@ -223,20 +289,37 @@ public class MarkerVORowImpl extends ViewRowImpl {
         setAttributeInternal(MMARSIGMA, value);
     }
 
+
     /**
-     * Gets the attribute value for the calculated attribute MmarSentidoMejor.
-     * @return the MmarSentidoMejor
+     * Gets the attribute value for the calculated attribute MmarTexto.
+     * @return the MmarTexto
      */
-    public Number getMmarSentidoMejor() {
-        return (Number) getAttributeInternal(MMARSENTIDOMEJOR);
+    public String getMmarTexto() {
+        return (String) getAttributeInternal(MMARTEXTO);
     }
 
     /**
-     * Sets <code>value</code> as the attribute value for the calculated attribute MmarSentidoMejor.
-     * @param value value to set the  MmarSentidoMejor
+     * Sets <code>value</code> as the attribute value for the calculated attribute MmarTexto.
+     * @param value value to set the  MmarTexto
      */
-    public void setMmarSentidoMejor(Number value) {
-        setAttributeInternal(MMARSENTIDOMEJOR, value);
+    public void setMmarTexto(String value) {
+        setAttributeInternal(MMARTEXTO, value);
+    }
+
+    /**
+     * Gets the attribute value for the calculated attribute MmarColor.
+     * @return the MmarColor
+     */
+    public String getMmarColor() {
+        return (String) getAttributeInternal(MMARCOLOR);
+    }
+
+    /**
+     * Sets <code>value</code> as the attribute value for the calculated attribute MmarColor.
+     * @param value value to set the  MmarColor
+     */
+    public void setMmarColor(String value) {
+        setAttributeInternal(MMARCOLOR, value);
     }
 
     /**

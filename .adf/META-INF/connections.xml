@@ -36,6 +36,9 @@
          <StringRefAddr addrType="user">
             <Contents/>
          </StringRefAddr>
+         <StringRefAddr addrType="SavePassword">
+            <Contents>false</Contents>
+         </StringRefAddr>
          <StringRefAddr addrType="DeployPassword">
             <Contents>true</Contents>
          </StringRefAddr>

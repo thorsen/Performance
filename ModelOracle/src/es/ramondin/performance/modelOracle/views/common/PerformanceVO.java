@@ -17,10 +17,10 @@ public interface PerformanceVO extends ViewObject {
     String getQuerySQL();
 
 
-    void setCamposAnualMensualBD();
+    void preparaQueryFinal(Integer celulaAgrup, ArrayList celulasExcepcion);
 
-    void executeWithParamsEdit(BigDecimal seccion, BigDecimal celula,
-                               Integer celulaAgrup, ArrayList celulasExcepcion,
-                               Integer anoRuptura, Integer anosHistorico,
-                               Integer hastaFecha);
+    void executeWithParamsEdit(BigDecimal seccion, BigDecimal celula, Integer anoRuptura, Integer anosHistorico, Integer hastaFecha, Boolean desgloseMensual,
+                               Boolean mismoPeriodo, Boolean romperPorTurno, String[] turnos);
+
+    void executeWithParamsEdit(BigDecimal seccion, BigDecimal celula, Integer anoRuptura, Integer anosHistorico, Integer hastaFecha);
 }

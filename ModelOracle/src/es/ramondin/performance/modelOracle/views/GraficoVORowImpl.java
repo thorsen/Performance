@@ -56,6 +56,16 @@ public class GraficoVORowImpl extends ViewRowImpl {
             }
         }
         ,
+        MgraSentidoMejor {
+            public Object get(GraficoVORowImpl obj) {
+                return obj.getMgraSentidoMejor();
+            }
+
+            public void put(GraficoVORowImpl obj, Object value) {
+                obj.setMgraSentidoMejor((Number)value);
+            }
+        }
+        ,
         MgraCampoAnual {
             public Object get(GraficoVORowImpl obj) {
                 return obj.getMgraCampoAnual();
@@ -106,6 +116,16 @@ public class GraficoVORowImpl extends ViewRowImpl {
             }
         }
         ,
+        MgraTituloEjey {
+            public Object get(GraficoVORowImpl obj) {
+                return obj.getMgraTituloEjey();
+            }
+
+            public void put(GraficoVORowImpl obj, Object value) {
+                obj.setMgraTituloEjey((String)value);
+            }
+        }
+        ,
         IdTipoGraIdGraTrans {
             public Object get(GraficoVORowImpl obj) {
                 return obj.getIdTipoGraIdGraTrans();
@@ -129,6 +149,16 @@ public class GraficoVORowImpl extends ViewRowImpl {
         Marker {
             public Object get(GraficoVORowImpl obj) {
                 return obj.getMarker();
+            }
+
+            public void put(GraficoVORowImpl obj, Object value) {
+                obj.setAttributeInternal(index(), value);
+            }
+        }
+        ,
+        MarkerEspecial {
+            public Object get(GraficoVORowImpl obj) {
+                return obj.getMarkerEspecial();
             }
 
             public void put(GraficoVORowImpl obj, Object value) {
@@ -168,14 +198,17 @@ public class GraficoVORowImpl extends ViewRowImpl {
     public static final int MGRAIDGRA = AttributesEnum.MgraIdGra.index();
     public static final int MGRATITULO = AttributesEnum.MgraTitulo.index();
     public static final int MGRASUBTITULO = AttributesEnum.MgraSubtitulo.index();
+    public static final int MGRASENTIDOMEJOR = AttributesEnum.MgraSentidoMejor.index();
     public static final int MGRACAMPOANUAL = AttributesEnum.MgraCampoAnual.index();
     public static final int MGRACAMPOMENSUAL = AttributesEnum.MgraCampoMensual.index();
     public static final int MGRATIPOEJEY = AttributesEnum.MgraTipoEjey.index();
     public static final int MGRAUDSEJEY = AttributesEnum.MgraUdsEjey.index();
     public static final int MGRAMAXDECIMALES = AttributesEnum.MgraMaxDecimales.index();
+    public static final int MGRATITULOEJEY = AttributesEnum.MgraTituloEjey.index();
     public static final int IDTIPOGRAIDGRATRANS = AttributesEnum.IdTipoGraIdGraTrans.index();
     public static final int DESCGRAFICOTRANS = AttributesEnum.DescGraficoTrans.index();
     public static final int MARKER = AttributesEnum.Marker.index();
+    public static final int MARKERESPECIAL = AttributesEnum.MarkerEspecial.index();
 
     /**
      * This is the default constructor (do not remove).
@@ -245,6 +278,22 @@ public class GraficoVORowImpl extends ViewRowImpl {
      */
     public void setMgraSubtitulo(String value) {
         setAttributeInternal(MGRASUBTITULO, value);
+    }
+
+    /**
+     * Gets the attribute value for the calculated attribute MgraSentidoMejor.
+     * @return the MgraSentidoMejor
+     */
+    public Number getMgraSentidoMejor() {
+        return (Number) getAttributeInternal(MGRASENTIDOMEJOR);
+    }
+
+    /**
+     * Sets <code>value</code> as the attribute value for the calculated attribute MgraSentidoMejor.
+     * @param value value to set the  MgraSentidoMejor
+     */
+    public void setMgraSentidoMejor(Number value) {
+        setAttributeInternal(MGRASENTIDOMEJOR, value);
     }
 
     /**
@@ -328,6 +377,22 @@ public class GraficoVORowImpl extends ViewRowImpl {
     }
 
     /**
+     * Gets the attribute value for the calculated attribute MgraTituloEjey.
+     * @return the MgraTituloEjey
+     */
+    public String getMgraTituloEjey() {
+        return (String) getAttributeInternal(MGRATITULOEJEY);
+    }
+
+    /**
+     * Sets <code>value</code> as the attribute value for the calculated attribute MgraTituloEjey.
+     * @param value value to set the  MgraTituloEjey
+     */
+    public void setMgraTituloEjey(String value) {
+        setAttributeInternal(MGRATITULOEJEY, value);
+    }
+
+    /**
      * Gets the attribute value for the calculated attribute DescGraficoTrans.
      * @return the DescGraficoTrans
      */
@@ -366,6 +431,13 @@ public class GraficoVORowImpl extends ViewRowImpl {
         return (RowIterator)getAttributeInternal(MARKER);
     }
 
+
+    /**
+     * Gets the associated <code>RowIterator</code> using master-detail link MarkerEspecial.
+     */
+    public RowIterator getMarkerEspecial() {
+        return (RowIterator)getAttributeInternal(MARKERESPECIAL);
+    }
 
     /**
      * getAttrInvokeAccessor: generated method. Do not modify.

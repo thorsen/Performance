@@ -11,8 +11,11 @@
           <af:inputNumberSpinbox label="#{viewcontrollerBundle.ANO_DE_RUPTURA}" id="ins1" minimum="1900" maximum="#{PerformanceBean.anoRupturaMax}"
                                  value="#{PerformanceBean.anoRuptura}" autoSubmit="true"/>
           <af:inputNumberSpinbox label="#{viewcontrollerBundle.ANOS_DE_HISTORICO}" id="ins2" minimum="1" maximum="10" value="#{PerformanceBean.anosHistorico}"/>
-          <af:selectBooleanCheckbox text="#{viewcontrollerBundle.VISUALIZAR_A_MES_VENCIDO}" id="sbc2" binding="#{PerformanceBean.cbMesVencido}" selected="true"
-                                    visible="#{PerformanceBean.anoRuptura == PerformanceBean.anoRupturaMax}" partialTriggers="ins1"/>
+          <af:selectBooleanCheckbox text="#{viewcontrollerBundle.VISUALIZAR_A_MES_VENCIDO}" id="sbc2" binding="#{PerformanceBean.cbMesVencido}"
+                                    visible="#{PerformanceBean.anoRuptura == PerformanceBean.anoRupturaMax}" partialTriggers="ins1" selected="true"/>
+          <af:selectBooleanCheckbox text="#{viewcontrollerBundle.MISMO_PERIODO_EN_ANOS_ANT}" id="sbc4" binding="#{PerformanceBean.cbMismoPeriodo}"
+                                    selected="false"/>
+          <af:selectBooleanCheckbox text="#{viewcontrollerBundle.VER_DESGLOSE_MENSUAL}" id="sbc5" binding="#{PerformanceBean.cbVerMensual}" selected="true"/>
           <af:selectOneChoice value="#{bindings.TipoGrafico.inputValue}" label="#{bindings.TipoGrafico.label}" shortDesc="#{bindings.TipoGrafico.hints.tooltip}"
                               id="soc1" autoSubmit="true">
             <f:selectItems value="#{bindings.TipoGrafico.items}" id="si1"/>
@@ -32,23 +35,32 @@
           </af:selectOneChoice>
           <af:selectBooleanCheckbox text="#{viewcontrollerBundle.SELECCIONAR_AGRUPACION_DE_CELULAS}" id="sbc1" value="#{PerformanceBean.mostrarCelulasAgrup}"
                                     visible="#{PerformanceBean.mostrarCheckCelulasAgrup}" partialTriggers="soc3" autoSubmit="true"/>
-          <af:selectOneChoice value="-1" label="#{viewcontrollerBundle.SELECCIONAR_AGRUPACION}" id="so5" autoSubmit="true" partialTriggers="sbc1"
+          <af:selectOneChoice value="-1" label="#{viewcontrollerBundle.SELECCIONAR_AGRUPACION}" id="soc5" autoSubmit="true" partialTriggers="sbc1"
                               visible="#{PerformanceBean.mostrarCelulasAgrup}" binding="#{PerformanceBean.socCelulasAgrup}">
             <f:selectItems value="#{PerformanceBean.listaCelulasAgrup}" id="si6"/>
           </af:selectOneChoice>
+          <af:selectBooleanCheckbox text="#{viewcontrollerBundle.ROMPER_POR_TURNO}" id="sbc3" value="#{PerformanceBean.romperPorTurno}" autoSubmit="true"/>
+          <af:selectManyChoice value="#{PerformanceBean.turnosSelIndexes}" label="#{viewcontrollerBundle.SELECCIONAR_TURNO}" id="smc1" required="true"
+                               requiredMessageDetail="#{viewcontrollerBundle.DEBE_SELECCIONAR_UN_TURNO}" autoSubmit="true">
+            <f:selectItems value="#{bindings.Turno.items}" id="si5"/>
+          </af:selectManyChoice>
           <af:commandButton text="#{viewcontrollerBundle.REFRESCAR_GRAFICO}"
                             disabled="#{!bindings.ExecuteWithParams.enabled or bindings.MgraIdGra.attributeValue == null or PerformanceBean.cuentaCelulas == 0}"
-                            id="cb1" actionListener="#{PerformanceBean.refrescarGrafico}" partialSubmit="true" partialTriggers="soc2"/>
+                            id="cb1" action="#{PerformanceBean.refrescarGrafico}" partialSubmit="true" partialTriggers="soc2"/>
         </af:panelFormLayout>
-        <Grafico:CompDecGrafico id="cdg1" graphModel="#{bindings.Performance.graphModel}" titulo="#{PerformanceBean.tituloGrafico}"
-                                 subtitulo="#{PerformanceBean.subtituloGrafico}" inLineStyleComp="width:841px;height:595px"
-                                 sentidoMejor="#{PerformanceBean.sentidoMejor}" arrayValorMarkers="#{PerformanceBean.valorMarkers}" renderMarkerText="true"
-                                 sizeMarkerText="12" partialTriggersComp="cb1" autoPrecisionType="off" scalingType="none" mostrarImprimir="true"
-                                 printWidth="1315" printHeight="930" printRutaDestino="#{PerformanceBean.rutaDestino}"
-                                 rutaFicheroXSL="#{PerformanceBean.rutaFicheroXSL}" convNumberTypeY1="#{PerformanceBean.convNumberType}"
-                                 convNumberCurrencySymbolY1="#{PerformanceBean.convNumberCurrencySymbol}" maxFractionDigitsY1="#{PerformanceBean.maxFractionDigits}"
-                                 textoEsquinaSupIzq="#{PerformanceBean.textoEsquinaSupIzq}" textoEsquinaSupDer="#{PerformanceBean.textoEsquinaSupDer}"
-                                 fileName="#{PerformanceBean.fileName}" formatoSalida="#{PerformanceBean.formatoSalida}" descargaDirecta="true"/>
+        <Grafico:CompDecGrafico id="cdg1" graphModel="#{PerformanceBean.graphModel == null ? bindings.Performance.graphModel : PerformanceBean.graphModel}"
+                                titulo="#{PerformanceBean.tituloGrafico}" subtitulo="#{PerformanceBean.subtituloGrafico}"
+                                tituloEjeY1="#{PerformanceBean.tituloEjeY1}" inLineStyleComp="width:841px;height:595px"
+                                sentidoMejor="#{PerformanceBean.sentidoMejor}" arrayTextoMarkers="#{PerformanceBean.textoMarkers}"
+                                arrayValorMarkers="#{PerformanceBean.valorMarkers}" arrayColorMarkers="#{PerformanceBean.colorMarkers}" renderMarkerText="true"
+                                sizeMarkerText="12" partialTriggersComp="cb1" autoPrecisionType="off" scalingType="none" mostrarImprimir="true"
+                                printWidth="1315" printHeight="930" printRutaDestino="#{PerformanceBean.rutaDestino}"
+                                rutaFicheroXSL="#{PerformanceBean.rutaFicheroXSL}" convNumberTypeY1="#{PerformanceBean.convNumberType}"
+                                convNumberCurrencySymbolY1="#{PerformanceBean.convNumberCurrencySymbol}"
+                                maxFractionDigitsY1="#{PerformanceBean.maxFractionDigits}" textoEsquinaSupIzq="#{PerformanceBean.textoEsquinaSupIzq}"
+                                textoEsquinaSupDer="#{PerformanceBean.textoEsquinaSupDer}" fileName="#{PerformanceBean.fileName}"
+                                formatoSalida="#{PerformanceBean.formatoSalida}" descargaDirecta="true"
+                                tipoMarkerSeriesSet="#{PerformanceBean.tipoMarkerSeriesSet}" arrayTipoMarkerSeries="#{PerformanceBean.tipoMarkerSeries}"/>
       </af:form>
     </af:document>
   </f:view>

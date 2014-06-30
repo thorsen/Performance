@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<!DOCTYPE ViewObject SYSTEM "jbo_03_01.dtd">
+<!---->
+<ViewObject
+  xmlns="http://xmlns.oracle.com/bc4j"
+  Name="IshikawaVO"
+  Version="11.1.1.64.93"
+  InheritPersonalization="true"
+  BindingStyle="OracleName"
+  CustomQuery="true"
+  FetchMode="FETCH_AS_NEEDED"
+  PageIterMode="Full"
+  UseGlueCode="false"
+  OrderBy="MISH_ID"
+  RowClass="es.ramondin.performance.modelOracle.views.IshikawaVORowImpl"
+  ComponentClass="es.ramondin.performance.modelOracle.views.IshikawaVOImpl"
+  ComponentInterface="es.ramondin.performance.modelOracle.views.common.IshikawaVO"
+  ClientProxyName="es.ramondin.performance.modelOracle.views.client.IshikawaVOClient">
+  <DesignTime>
+    <Attr Name="_isExpertMode" Value="true"/>
+    <Attr Name="_codeGenFlag2" Value="Access|Coll"/>
+    <Attr Name="_isCodegen" Value="true"/>
+  </DesignTime>
+  <Properties>
+    <SchemaBasedProperties>
+      <LABEL
+        ResId="es.ramondin.performance.modelOracle.views.IshikawaVO_LABEL"/>
+    </SchemaBasedProperties>
+  </Properties>
+  <SQLQuery>
+    <![CDATA[SELECT MISH_ID, MISH_DESC, MISH_ID_TGR_EFECTO, MISH_ID_GRA_EFECTO
+FROM TPROMISH_C]]>
+  </SQLQuery>
+  <ViewAttribute
+    Name="MishId"
+    IsUpdateable="false"
+    IsPersistent="false"
+    IsNotNull="true"
+    PrecisionRule="true"
+    Precision="3"
+    Scale="0"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    AliasName="MISH_ID"
+    Expression="MISH_ID"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="4"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="MishDesc"
+    IsUpdateable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="100"
+    Type="java.lang.String"
+    ColumnType="VARCHAR2"
+    AliasName="MISH_DESC"
+    Expression="MISH_DESC"
+    SQLType="VARCHAR">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="100"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="MishIdTgrEfecto"
+    IsUpdateable="false"
+    IsPersistent="false"
+    IsNotNull="true"
+    PrecisionRule="true"
+    Precision="1"
+    Type="java.lang.String"
+    ColumnType="CHAR"
+    AliasName="MISH_ID_TGR_EFECTO"
+    Expression="MISH_ID_TGR_EFECTO"
+    SQLType="VARCHAR">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="1"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="MishIdGraEfecto"
+    IsUpdateable="false"
+    IsPersistent="false"
+    IsNotNull="true"
+    PrecisionRule="true"
+    Precision="3"
+    Scale="0"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    AliasName="MISH_ID_GRA_EFECTO"
+    Expression="MISH_ID_GRA_EFECTO"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="4"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="DescIshikawaTrans"
+    IsUpdateable="false"
+    IsSelected="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="java.lang.String"
+    ColumnType="VARCHAR2"
+    AliasName="VIEW_ATTR"
+    SQLType="VARCHAR">
+    <RecalcCondition><![CDATA[true]]></RecalcCondition>
+    <TransientExpression><![CDATA[MishId + " - " + MishDesc]]></TransientExpression>
+    <Dependencies>
+      <Item
+        Value="MishDesc"/>
+      <Item
+        Value="MishId"/>
+    </Dependencies>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.performance.modelOracle.views.IshikawaVO.DescIshikawaTrans_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewLinkAccessor
+    Name="IshikawaLin"
+    ViewLink="es.ramondin.performance.modelOracle.viewlinks.IshikawaIshikawaLinVL"
+    Type="oracle.jbo.RowIterator"
+    IsUpdateable="false"/>
+  <ViewLinkAccessor
+    Name="Grafico"
+    ViewLink="es.ramondin.performance.modelOracle.viewlinks.IshikawaGraficoVL"
+    Type="oracle.jbo.RowIterator"
+    IsUpdateable="false"/>
+  <ResourceBundle>
+    <PropertiesBundle
+      PropertiesFile="es.ramondin.performance.modelOracle.resources.ModelOracleBundle"/>
+  </ResourceBundle>
+  <ClientInterface>
+    <Method
+      Name="getEfecto">
+      <Return
+        Type="java.util.ArrayList"
+        IsGeneric="true">
+        <Element
+          Type="java.lang.Object[]"/>
+      </Return>
+    </Method>
+  </ClientInterface>
+</ViewObject>

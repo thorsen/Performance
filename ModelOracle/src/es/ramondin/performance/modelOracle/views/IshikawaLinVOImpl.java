@@ -32,18 +32,19 @@ public class IshikawaLinVOImpl extends ViewObjectImpl implements IshikawaLinVO {
 
         if (rsiLineas.getRowCount() != 0) {
             Object[] resAux;
-            IshikawaLinVORowImpl rowIshikawaLin;
 
             res = new ArrayList<Object[]>();
             
-            rsiLineas.reset();
-
-            while (rsiLineas.hasNext()) {
-                rowIshikawaLin = (IshikawaLinVORowImpl)rsiLineas.next();
+            IshikawaLinVORowImpl rowIshikawaLin = (IshikawaLinVORowImpl)rsiLineas.first();
+            while (rowIshikawaLin != null) {
                 resAux = new Object[] { rowIshikawaLin.getMishIdTgrCausa(), rowIshikawaLin.getMishIdGraCausa() };
-
+                
                 res.add(resAux);
+                rowIshikawaLin = (IshikawaLinVORowImpl)rsiLineas.next();
             }
+            
+            //Restablecemos el iterador
+            rsiLineas.reset();
         }
 
         return res;

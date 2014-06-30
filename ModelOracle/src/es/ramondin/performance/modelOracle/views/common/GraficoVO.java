@@ -15,4 +15,8 @@ public interface GraficoVO extends ViewObject {
     void setCurrentRowGrafico(Key key);
 
     Number getMaxDecimales();
+
+    Number getSentidoMejor();
+
+    String getTituloEjeY();
 }

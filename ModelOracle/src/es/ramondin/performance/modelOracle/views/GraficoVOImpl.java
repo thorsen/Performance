@@ -29,6 +29,14 @@ public class GraficoVOImpl extends ViewObjectImpl implements GraficoVO {
     public Number getMaxDecimales() {
         return ((GraficoVORowImpl)this.getCurrentRow()).getMgraMaxDecimales();
     }
+    
+    public String getTituloEjeY() {
+        return ((GraficoVORowImpl)this.getCurrentRow()).getMgraTituloEjey();
+    }
+    
+    public Number getSentidoMejor() {
+        return ((GraficoVORowImpl)this.getCurrentRow()).getMgraSentidoMejor();
+    }
 
     public void setCurrentRowGrafico(Key key) {
         this.setCurrentRow(this.getRow(key));

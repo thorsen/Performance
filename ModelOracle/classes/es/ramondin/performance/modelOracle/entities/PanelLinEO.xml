@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<!DOCTYPE Entity SYSTEM "jbo_03_01.dtd">
+<!---->
+<Entity
+  xmlns="http://xmlns.oracle.com/bc4j"
+  Name="PanelLinEO"
+  Version="11.1.1.64.93"
+  InheritPersonalization="true"
+  DBObjectType="table"
+  DBObjectName="TPROMPAN_L"
+  AliasName="PanelLinEO"
+  BindingStyle="OracleName"
+  UseGlueCode="false">
+  <DesignTime>
+    <AttrArray Name="_publishEvents"/>
+  </DesignTime>
+  <Attribute
+    Name="MpanIdC"
+    IsNotNull="true"
+    Precision="3"
+    Scale="0"
+    ColumnName="MPAN_ID_C"
+    SQLType="NUMERIC"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    TableName="TPROMPAN_L"
+    PrimaryKey="true">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="4"/>
+    </DesignTime>
+  </Attribute>
+  <Attribute
+    Name="MpanIdL"
+    IsNotNull="true"
+    Precision="2"
+    Scale="0"
+    ColumnName="MPAN_ID_L"
+    SQLType="NUMERIC"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    TableName="TPROMPAN_L"
+    PrimaryKey="true">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="3"/>
+    </DesignTime>
+  </Attribute>
+  <Attribute
+    Name="MpanIdTipoGra"
+    IsNotNull="true"
+    Precision="1"
+    ColumnName="MPAN_ID_TIPO_GRA"
+    SQLType="CHAR"
+    Type="java.lang.String"
+    ColumnType="CHAR"
+    TableName="TPROMPAN_L"
+    RetrievedOnUpdate="true"
+    RetrievedOnInsert="true">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="1"/>
+    </DesignTime>
+  </Attribute>
+  <Attribute
+    Name="MpanIdGra"
+    IsNotNull="true"
+    Precision="3"
+    Scale="0"
+    ColumnName="MPAN_ID_GRA"
+    SQLType="NUMERIC"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    TableName="TPROMPAN_L">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="4"/>
+    </DesignTime>
+  </Attribute>
+  <Attribute
+    Name="MpanPosFila"
+    IsNotNull="true"
+    Precision="2"
+    Scale="0"
+    ColumnName="MPAN_POS_FILA"
+    SQLType="NUMERIC"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    TableName="TPROMPAN_L">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="3"/>
+    </DesignTime>
+  </Attribute>
+  <Attribute
+    Name="MpanPosCol"
+    IsNotNull="true"
+    Precision="2"
+    Scale="0"
+    ColumnName="MPAN_POS_COL"
+    SQLType="NUMERIC"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    TableName="TPROMPAN_L">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="3"/>
+    </DesignTime>
+  </Attribute>
+  <Attribute
+    Name="MpanHAlign"
+    Precision="10"
+    ColumnName="MPAN_H_ALIGN"
+    SQLType="VARCHAR"
+    Type="java.lang.String"
+    ColumnType="VARCHAR2"
+    TableName="TPROMPAN_L">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="10"/>
+    </DesignTime>
+  </Attribute>
+  <Attribute
+    Name="MpanVAlign"
+    Precision="10"
+    ColumnName="MPAN_V_ALIGN"
+    SQLType="VARCHAR"
+    Type="java.lang.String"
+    ColumnType="VARCHAR2"
+    TableName="TPROMPAN_L">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="10"/>
+    </DesignTime>
+  </Attribute>
+  <Attribute
+    Name="MpanColSpan"
+    Precision="2"
+    Scale="0"
+    ColumnName="MPAN_COL_SPAN"
+    SQLType="NUMERIC"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    TableName="TPROMPAN_L">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="3"/>
+    </DesignTime>
+  </Attribute>
+  <Attribute
+    Name="MpanRowSpan"
+    Precision="2"
+    Scale="0"
+    ColumnName="MPAN_ROW_SPAN"
+    SQLType="NUMERIC"
+    Type="oracle.jbo.domain.Number"
+    ColumnType="NUMBER"
+    TableName="TPROMPAN_L">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="3"/>
+    </DesignTime>
+  </Attribute>
+  <AccessorAttribute
+    Name="Panel"
+    Association="es.ramondin.performance.modelOracle.assoc.PanelPanelLinAS"
+    AssociationEnd="es.ramondin.performance.modelOracle.assoc.PanelPanelLinAS.Panel"
+    AssociationOtherEnd="es.ramondin.performance.modelOracle.assoc.PanelPanelLinAS.PanelLin"
+    Type="oracle.jbo.server.EntityImpl"
+    IsUpdateable="true"/>
+  <Key
+    Name="SysC0077341">
+    <DesignTime>
+      <Attr Name="_DBObjectName" Value="SYS_C0077341"/>
+      <Attr Name="_checkCondition" Value='"MPAN_ID_C" IS NOT NULL'/>
+      <Attr Name="_isCheck" Value="true"/>
+    </DesignTime>
+    <AttrArray Name="Attributes">
+      <Item Value="es.ramondin.performance.modelOracle.entities.PanelLinEO.MpanIdC"/>
+    </AttrArray>
+  </Key>
+  <Key
+    Name="SysC0077342">
+    <DesignTime>
+      <Attr Name="_DBObjectName" Value="SYS_C0077342"/>
+      <Attr Name="_checkCondition" Value='"MPAN_ID_L" IS NOT NULL'/>
+      <Attr Name="_isCheck" Value="true"/>
+    </DesignTime>
+    <AttrArray Name="Attributes">
+      <Item Value="es.ramondin.performance.modelOracle.entities.PanelLinEO.MpanIdL"/>
+    </AttrArray>
+  </Key>
+  <Key
+    Name="SysC0077343">
+    <DesignTime>
+      <Attr Name="_DBObjectName" Value="SYS_C0077343"/>
+      <Attr Name="_checkCondition" Value='"MPAN_ID_TIPO_GRA" IS NOT NULL'/>
+      <Attr Name="_isCheck" Value="true"/>
+    </DesignTime>
+    <AttrArray Name="Attributes">
+      <Item Value="es.ramondin.performance.modelOracle.entities.PanelLinEO.MpanIdTipoGra"/>
+    </AttrArray>
+  </Key>
+  <Key
+    Name="SysC0077344">
+    <DesignTime>
+      <Attr Name="_DBObjectName" Value="SYS_C0077344"/>
+      <Attr Name="_checkCondition" Value='"MPAN_ID_GRA" IS NOT NULL'/>
+      <Attr Name="_isCheck" Value="true"/>
+    </DesignTime>
+    <AttrArray Name="Attributes">
+      <Item Value="es.ramondin.performance.modelOracle.entities.PanelLinEO.MpanIdGra"/>
+    </AttrArray>
+  </Key>
+  <Key
+    Name="SysC0077345">
+    <DesignTime>
+      <Attr Name="_DBObjectName" Value="SYS_C0077345"/>
+      <Attr Name="_checkCondition" Value='"MPAN_POS_FILA" IS NOT NULL'/>
+      <Attr Name="_isCheck" Value="true"/>
+    </DesignTime>
+    <AttrArray Name="Attributes">
+      <Item Value="es.ramondin.performance.modelOracle.entities.PanelLinEO.MpanPosFila"/>
+    </AttrArray>
+  </Key>
+  <Key
+    Name="SysC0077346">
+    <DesignTime>
+      <Attr Name="_DBObjectName" Value="SYS_C0077346"/>
+      <Attr Name="_checkCondition" Value='"MPAN_POS_COL" IS NOT NULL'/>
+      <Attr Name="_isCheck" Value="true"/>
+    </DesignTime>
+    <AttrArray Name="Attributes">
+      <Item Value="es.ramondin.performance.modelOracle.entities.PanelLinEO.MpanPosCol"/>
+    </AttrArray>
+  </Key>
+  <Key
+    Name="TprompanLPk"
+    PrimaryKey="true">
+    <DesignTime>
+      <Attr Name="_DBObjectName" Value="TPROMPAN_L_PK"/>
+    </DesignTime>
+    <AttrArray Name="Attributes">
+      <Item Value="es.ramondin.performance.modelOracle.entities.PanelLinEO.MpanIdC"/>
+      <Item Value="es.ramondin.performance.modelOracle.entities.PanelLinEO.MpanIdL"/>
+    </AttrArray>
+  </Key>
+  <Key
+    Name="TprompanLR01">
+    <DesignTime>
+      <Attr Name="_isCascadeDelete" Value="true"/>
+      <Attr Name="_referencedKey" Value="TPROMPAN_C_PK"/>
+      <Attr Name="_isForeign" Value="true"/>
+      <Attr Name="_DBObjectName" Value="TPROMPAN_L_R01"/>
+    </DesignTime>
+    <AttrArray Name="Attributes">
+      <Item Value="es.ramondin.performance.modelOracle.entities.PanelLinEO.MpanIdC"/>
+    </AttrArray>
+  </Key>
+  <Key
+    Name="TprompanLR02">
+    <DesignTime>
+      <Attr Name="_isCascadeDelete" Value="true"/>
+      <Attr Name="_referencedKey" Value="TPROMGRA_PK"/>
+      <Attr Name="_isForeign" Value="true"/>
+      <Attr Name="_DBObjectName" Value="TPROMPAN_L_R02"/>
+    </DesignTime>
+    <AttrArray Name="Attributes">
+      <Item Value="es.ramondin.performance.modelOracle.entities.PanelLinEO.MpanIdTipoGra"/>
+      <Item Value="es.ramondin.performance.modelOracle.entities.PanelLinEO.MpanIdGra"/>
+    </AttrArray>
+  </Key>
+</Entity>

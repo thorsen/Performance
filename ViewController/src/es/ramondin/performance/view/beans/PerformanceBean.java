@@ -1,6 +1,7 @@
 package es.ramondin.performance.view.beans;
 
 import es.ramondin.compdec.grafico.view.util.GraficoUtil;
+import es.ramondin.performance.modelOracle.views.MarkerVOImpl;
 import es.ramondin.performance.modelOracle.views.PerformanceVOImpl;
 import es.ramondin.utilidades.JSFUtils;
 
@@ -12,11 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
-
 import java.util.ResourceBundle;
 
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
@@ -28,9 +27,13 @@ import oracle.binding.BindingContainer;
 import oracle.binding.OperationBinding;
 
 import oracle.jbo.domain.Number;
+import oracle.jbo.uicli.binding.JUCtrlListBinding;
+
 
 public class PerformanceBean {
-    private Integer anoRuptura = this.ANO_RUPTURA_MAX;
+    private static final Integer ANO_RUPTURA_MAX = (new GregorianCalendar()).get(GregorianCalendar.YEAR);
+    
+    private Integer anoRuptura = ANO_RUPTURA_MAX;
     private Integer anosHistorico = 5;
     private String tituloGrafico;
     private String subtituloGrafico;
@@ -40,25 +43,31 @@ public class PerformanceBean {
     private Double[] valorMarkers;
     private String[] colorMarkers;
     private Boolean[] displayMarkers;
+    private String tipoMarkerSeriesSet;
+    private String[] tipoMarkerSeries;
     private List listaCelulasAgrup;
     private RichSelectOneChoice socCelulas;
     private RichSelectOneChoice socCelulasAgrup;
     private Boolean mostrarCelulasAgrup;
+    private Boolean romperPorTurno;
     private String rutaDestino;
     private String rutaFicheroXSL;
     private String convNumberType;
     private String convNumberCurrencySymbol;
     private Integer maxFractionDigits;
+    private String tituloEjeY1;
     private String textoEsquinaSupIzq;
     private String textoEsquinaSupDer;
     private String fileName;
     private RichSelectBooleanCheckbox cbMesVencido;
+    private RichSelectBooleanCheckbox cbMismoPeriodo;
+    private RichSelectBooleanCheckbox cbVerMensual;
+    private Integer[] turnosSelIndexes;
+    private oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel graphModel;
 
     private static final String RUTA_FICHEROS_PDF = "DIR_FICHEROS_PDF";
     private static final String RUTA_FICHEROS_XSL = "DIR_FICHEROS_XSL";
     private static final String FICHERO_XSL = "graficoA4Landscape.xsl";
-
-    private static final Integer ANO_RUPTURA_MAX = (new GregorianCalendar()).get(GregorianCalendar.YEAR);
 
     public PerformanceBean() {
         OperationBinding operation = this.getBindings().getOperationBinding("getValor");
@@ -73,15 +82,12 @@ public class PerformanceBean {
         return BindingContext.getCurrent().getCurrentBindingsEntry();
     }
 
-    public void refrescarGrafico(ActionEvent actionEvent) {
+    public String refrescarGrafico() {
         GregorianCalendar gc = new GregorianCalendar();
 
         //Establecemos la query
         OperationBinding operation = this.getBindings().getOperationBinding("getQuerySQL");
         String queryOrig = (String)operation.execute();
-
-        operation = this.getBindings().getOperationBinding("setCamposAnualMensualBD");
-        operation.execute();
 
         operation = this.getBindings().getOperationBinding("getTipoEjeY");
         this.setConvNumberType((String)operation.execute());
@@ -91,6 +97,9 @@ public class PerformanceBean {
 
         operation = this.getBindings().getOperationBinding("getMaxDecimales");
         this.setMaxFractionDigits((Number)operation.execute());
+
+        operation = this.getBindings().getOperationBinding("getTituloEjeY");
+        this.setTituloEjeY1((String)operation.execute());
 
         Integer seccion = (Integer)JSFUtils.resolveExpression("#{bindings.MvarSecuen3.attributeValue}");
         String txtSeccion = (String)JSFUtils.resolveExpression("#{bindings.Seccion.label}");
@@ -140,14 +149,23 @@ public class PerformanceBean {
 
         Integer hastaFecha = Integer.parseInt((new SimpleDateFormat("yyyyMMdd")).format(gcAux.getTime()));
 
+        JUCtrlListBinding turnosLista = (JUCtrlListBinding)this.getBindings().get("Turno");
+        
+        operation = this.getBindings().getOperationBinding("preparaQueryFinal");
+        operation.getParamsMap().put("celulaAgrup", celulaAgrup);
+        operation.getParamsMap().put("celulasExcepcion", celulasExcepcion);
+        operation.execute();
+
         operation = this.getBindings().getOperationBinding("executeWithParamsEdit");
         operation.getParamsMap().put("seccion", seccion);
         operation.getParamsMap().put("celula", celula);
-        operation.getParamsMap().put("celulaAgrup", celulaAgrup);
-        operation.getParamsMap().put("celulasExcepcion", celulasExcepcion);
         operation.getParamsMap().put("anoRuptura", gcAux.get(GregorianCalendar.YEAR));
         operation.getParamsMap().put("anosHistorico", this.getAnosHistorico());
         operation.getParamsMap().put("hastaFecha", hastaFecha);
+        operation.getParamsMap().put("desgloseMensual", this.cbVerMensual.isSelected());
+        operation.getParamsMap().put("mismoPeriodo", this.cbMismoPeriodo.isSelected());
+        operation.getParamsMap().put("romperPorTurno", this.romperPorTurno);
+        operation.getParamsMap().put("turnos", turnosLista.getSelectedValues());
         operation.execute();
 
         //Restablecemos la query
@@ -156,13 +174,136 @@ public class PerformanceBean {
         operation.execute();
 
         //Preparamos el gráfico
-        operation = this.getBindings().getOperationBinding("getValorMarkers");
-        operation.getParamsMap().put("desdeFecha", null);
-        this.setValorMarkers((Double[])operation.execute());
-
+        String tipoMarkerSeriesSetAux = null;
+        String[] tipoMarkerSeriesAux = null;
+        oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel graphModelAux = null;
+        
+        if (this.cbVerMensual.isSelected()) {
+            tipoMarkerSeriesSetAux = "MT_DEFAULT";
+            tipoMarkerSeriesAux = new String[]{"MT_BAR", "MT_MARKER"};
+            
+            if (romperPorTurno)
+                graphModelAux = (oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel)JSFUtils.resolveExpression("#{bindings.PerformanceTurnos.graphModel}");
+            else
+                graphModelAux = (oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel)JSFUtils.resolveExpression("#{bindings.Performance.graphModel}");
+        } else {
+            tipoMarkerSeriesSetAux = "MT_BAR";
+            tipoMarkerSeriesAux = new String[]{"MT_BAR"};
+            
+            if (romperPorTurno)
+                graphModelAux = (oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel)JSFUtils.resolveExpression("#{bindings.PerformanceSinMensualTurnos.graphModel}");
+            else
+                graphModelAux = (oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel)JSFUtils.resolveExpression("#{bindings.PerformanceSinMensual.graphModel}");
+        }
+        
+        this.setGraphModel(graphModelAux);
+        this.setTipoMarkerSeriesSet(tipoMarkerSeriesSetAux);
+        this.setTipoMarkerSeries(tipoMarkerSeriesAux);
+                
         operation = this.getBindings().getOperationBinding("getSentidoMejor");
-        operation.getParamsMap().put("desdeFecha", null);
         this.setSentidoMejor((Number)operation.execute());
+
+        operation = this.getBindings().getOperationBinding("cargaMarkers");
+        operation.getParamsMap().put("idSeccion", seccion);
+        operation.getParamsMap().put("idCelula", celula != null ? celula : celulaAgrup);
+        operation.getParamsMap().put("desdeFecha", null);
+        operation.getParamsMap().put("sentidoMejor", this.getSentidoMejor());
+        operation.execute();
+        
+        operation = this.getBindings().getOperationBinding("getTextoMarkers");
+        String[] textoMarkersAux = (String[])operation.execute();
+        
+        operation = this.getBindings().getOperationBinding("getValorMarkers");
+        Double[] valorMarkersAux = (Double[])operation.execute();
+        
+        operation = this.getBindings().getOperationBinding("getColorMarkers");
+        String[] colorMarkersAux = (String[])operation.execute();
+        
+        //Markers especiales
+        //Establecemos la query
+        operation = this.getBindings().getOperationBinding("cargaMarkersEsp");
+        operation.getParamsMap().put("seccion", seccion);
+        operation.getParamsMap().put("celula", celula);
+        operation.getParamsMap().put("celulaAgrup", celulaAgrup);
+        operation.getParamsMap().put("celulasExcepcion", celulasExcepcion);
+        operation.getParamsMap().put("anoRuptura", gcAux.get(GregorianCalendar.YEAR));
+        operation.getParamsMap().put("anosHistorico", 10);
+        operation.getParamsMap().put("hastaFecha", hastaFecha);
+        operation.getParamsMap().put("desgloseMensual", this.cbVerMensual.isSelected());
+        operation.getParamsMap().put("mismoPeriodo", this.cbMismoPeriodo.isSelected());
+        operation.getParamsMap().put("romperPorTurno", this.romperPorTurno);
+        operation.getParamsMap().put("turnos", turnosLista.getSelectedValues());
+        operation.execute();
+        
+        operation = this.getBindings().getOperationBinding("getTextoMarkersEsp");
+        String[] textoMarkersEsp = (String[])operation.execute();
+        
+        operation = this.getBindings().getOperationBinding("getValorMarkersEsp");
+        Double[] valorMarkersEsp = (Double[])operation.execute();
+        
+        operation = this.getBindings().getOperationBinding("getColorMarkersEsp");
+        String[] colorMarkersEsp = (String[])operation.execute();
+        
+        int numValorMarkersAux = valorMarkersAux != null ? valorMarkersAux.length : 0;
+        int numValorMarkersEsp =  valorMarkersEsp != null ? valorMarkersEsp.length : 0;
+        Double[] valorMarkersFinal = null;
+        String[] textoMarkersFinal = null;
+        String[] colorMarkersFinal = null;
+        
+        if (numValorMarkersAux + numValorMarkersEsp > 0) {
+            String textoAux = null;
+            String colorAux = null;
+            int pos = -1;
+            
+            valorMarkersFinal = new Double[numValorMarkersAux + numValorMarkersEsp];
+            textoMarkersFinal = new String[numValorMarkersAux + numValorMarkersEsp];
+            colorMarkersFinal = new String[numValorMarkersAux + numValorMarkersEsp];
+            
+            for (int i = 0; i < valorMarkersFinal.length; i++) {
+                if (i < numValorMarkersAux) {
+                    valorMarkersFinal[i] = valorMarkersAux[i];
+                    
+                    textoAux = textoMarkersAux[i];
+                    if (textoAux != null && textoAux.contains(MarkerVOImpl.TXT_TEXTO_DEF)) {
+                        pos = -1;
+                        try {
+                            pos = Integer.parseInt(textoAux.substring(MarkerVOImpl.TXT_TEXTO_DEF.length()));
+                        } catch (NumberFormatException ex) {
+                            ex.getMessage();    
+                        }
+                        
+                        if (pos >= 0  && pos < GraficoUtil.TEXTO_MARKERS_DEF.length)
+                            textoAux = GraficoUtil.TEXTO_MARKERS_DEF[pos];
+                        else
+                            textoAux = null;
+                    }
+                    textoMarkersFinal[i] = textoAux;
+                    
+                    colorAux = colorMarkersAux[i];
+                    if (colorAux != null && colorAux.contains(MarkerVOImpl.TXT_COLOR_DEF)) {
+                        pos = -1;
+                        try {
+                            pos = Integer.parseInt(colorAux.substring(MarkerVOImpl.TXT_COLOR_DEF.length()));
+                        } catch (NumberFormatException ex) {
+                            ex.getMessage();    
+                        }
+                        
+                        if (pos >= 0  && pos < GraficoUtil.COLOR_MARKERS_DEF.length)
+                            colorAux = GraficoUtil.COLOR_MARKERS_DEF[pos];
+                        else
+                            colorAux = null;
+                    }
+                    colorMarkersFinal[i] = colorAux;
+                } else {
+                    valorMarkersFinal[i] = valorMarkersEsp[i - numValorMarkersAux];
+                    textoMarkersFinal[i] = textoMarkersEsp[i - numValorMarkersAux];
+                    colorMarkersFinal[i] = colorMarkersEsp[i - numValorMarkersAux];
+                }
+            }
+        }
+        this.setValorMarkers(valorMarkersFinal);
+        this.setTextoMarkers(textoMarkersFinal);
+        this.setColorMarkers(colorMarkersFinal);
 
         this.setTituloGrafico((String)JSFUtils.resolveExpression("#{bindings.MgraTitulo.attributeValue}"));
         this.setSubtituloGrafico((String)JSFUtils.resolveExpression("#{bindings.MgraSubtitulo.attributeValue}"));
@@ -175,6 +316,12 @@ public class PerformanceBean {
                                    DateFormat.getTimeInstance(DateFormat.MEDIUM).format(gc.getTime()));
 
         this.setFileName(idTipoGraIdGra + "_" + (new SimpleDateFormat("yyyyMMdd_HHmmss")).format(gc.getTime()));
+        
+        return null;
+    }
+    
+    public Boolean getVerMensual() {
+        return this.cbVerMensual.isSelected();
     }
 
     public Integer getFormatoSalida() {
@@ -402,5 +549,85 @@ public class PerformanceBean {
 
     public Integer getMaxFractionDigits() {
         return maxFractionDigits;
+    }
+
+    public void setTituloEjeY1(String tituloEjeY1) {
+        this.tituloEjeY1 = tituloEjeY1;
+    }
+
+    public String getTituloEjeY1() {
+        return tituloEjeY1;
+    }
+
+    public void setRomperPorTurno(Boolean romperPorTurno) {
+        this.romperPorTurno = romperPorTurno;
+    }
+
+    public Boolean getRomperPorTurno() {
+        return romperPorTurno;
+    }
+
+    public void setCbMismoPeriodo(RichSelectBooleanCheckbox cbMismoPeriodo) {
+        this.cbMismoPeriodo = cbMismoPeriodo;
+    }
+
+    public RichSelectBooleanCheckbox getCbMismoPeriodo() {
+        return cbMismoPeriodo;
+    }
+
+    public void setTurnosSelIndexes(Integer[] turnosSelIndexes) {
+        this.turnosSelIndexes = turnosSelIndexes;
+        
+        JUCtrlListBinding turnosLista = (JUCtrlListBinding)this.getBindings().get("Turno");
+        if (turnosSelIndexes != null) {
+            int[] turnosSelIndexesInt = new int[turnosSelIndexes.length];
+            for (int i = 0; i < turnosSelIndexes.length; i++) {
+                turnosSelIndexesInt[i] = turnosSelIndexes[i];
+            }
+
+            turnosLista.setSelectedIndices(turnosSelIndexesInt);
+        } else
+            turnosLista.setSelectedIndices(null);
+    }
+
+    public Integer[] getTurnosSelIndexes() {
+        if (turnosSelIndexes == null) {
+            OperationBinding operation = this.getBindings().getOperationBinding("getIndicesTurnos");
+            turnosSelIndexes = (Integer[])operation.execute();
+        }
+        
+        return turnosSelIndexes;
+    }
+
+    public void setCbVerMensual(RichSelectBooleanCheckbox cbVerMensual) {
+        this.cbVerMensual = cbVerMensual;
+    }
+
+    public RichSelectBooleanCheckbox getCbVerMensual() {
+        return cbVerMensual;
+    }
+
+    public void setTipoMarkerSeriesSet(String tipoMarkerSeriesSet) {
+        this.tipoMarkerSeriesSet = tipoMarkerSeriesSet;
+    }
+
+    public String getTipoMarkerSeriesSet() {
+        return tipoMarkerSeriesSet;
+    }
+
+    public void setGraphModel(oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel graphModel) {
+        this.graphModel = graphModel;
+    }
+
+    public oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel getGraphModel() {
+        return graphModel;
+    }
+
+    public void setTipoMarkerSeries(String[] tipoMarkerSeries) {
+        this.tipoMarkerSeries = tipoMarkerSeries;
+    }
+
+    public String[] getTipoMarkerSeries() {
+        return tipoMarkerSeries;
     }
 }

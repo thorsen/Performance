@@ -15,4 +15,9 @@
     <managed-bean-class id="__10">es.ramondin.performance.view.beans.CuadroMandoBean</managed-bean-class>
     <managed-bean-scope id="__11">request</managed-bean-scope>
   </managed-bean>
+  <managed-bean id="__15">
+    <managed-bean-name id="__16">PanelBean</managed-bean-name>
+    <managed-bean-class id="__14">es.ramondin.performance.view.beans.PanelBean</managed-bean-class>
+    <managed-bean-scope id="__13">session</managed-bean-scope>
+  </managed-bean>
 </adfc-config>

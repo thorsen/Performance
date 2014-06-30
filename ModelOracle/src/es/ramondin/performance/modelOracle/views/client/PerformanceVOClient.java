@@ -48,32 +48,56 @@ public class PerformanceVOClient extends ViewUsageImpl implements PerformanceVO 
         return;
     }
 
-    public void setQuerySQL(String querySQL) {
+
+    public void executeWithParamsEdit(BigDecimal seccion, BigDecimal celula, Integer celulaAgrup, ArrayList celulasExcepcion, Integer anoRuptura,
+                                      Integer anosHistorico, Integer hastaFecha, Boolean mismoPeriodo, Boolean romperPorTurno, String turno) {
         Object _ret =
-            getApplicationModuleProxy().riInvokeExportedMethod(this,"setQuerySQL",new String [] {"java.lang.String"},new Object[] {querySQL});
+            getApplicationModuleProxy().riInvokeExportedMethod(this,"executeWithParamsEdit",new String [] {"java.math.BigDecimal","java.math.BigDecimal","java.lang.Integer","java.util.ArrayList","java.lang.Integer","java.lang.Integer","java.lang.Integer","java.lang.Boolean","java.lang.Boolean","java.lang.String"},new Object[] {seccion, celula, celulaAgrup, celulasExcepcion, anoRuptura, anosHistorico, hastaFecha, mismoPeriodo, romperPorTurno, turno});
+        return;
+    }
+
+
+    public void executeWithParamsEdit(BigDecimal seccion, BigDecimal celula, Integer celulaAgrup, ArrayList celulasExcepcion, Integer anoRuptura,
+                                      Integer anosHistorico, Integer hastaFecha, Boolean desgloseMensual, Boolean mismoPeriodo, Boolean romperPorTurno,
+                                      String[] turnos) {
+        Object _ret =
+            getApplicationModuleProxy().riInvokeExportedMethod(this,"executeWithParamsEdit",new String [] {"java.math.BigDecimal","java.math.BigDecimal","java.lang.Integer","java.util.ArrayList","java.lang.Integer","java.lang.Integer","java.lang.Integer","java.lang.Boolean","java.lang.Boolean","java.lang.Boolean","[Ljava.lang.String;"},new Object[] {seccion, celula, celulaAgrup, celulasExcepcion, anoRuptura, anosHistorico, hastaFecha, desgloseMensual, mismoPeriodo, romperPorTurno, turnos});
+        return;
+    }
+
+    public void executeWithParamsEdit(BigDecimal seccion, BigDecimal celula, Integer celulaAgrup, ArrayList celulasExcepcion, Integer anoRuptura,
+                                      Integer anosHistorico, Integer hastaFecha) {
+        Object _ret =
+            getApplicationModuleProxy().riInvokeExportedMethod(this,"executeWithParamsEdit",new String [] {"java.math.BigDecimal","java.math.BigDecimal","java.lang.Integer","java.util.ArrayList","java.lang.Integer","java.lang.Integer","java.lang.Integer"},new Object[] {seccion, celula, celulaAgrup, celulasExcepcion, anoRuptura, anosHistorico, hastaFecha});
+        return;
+    }
+
+    public void setQuerySQL(String querySQL) {
+        Object _ret = getApplicationModuleProxy().riInvokeExportedMethod(this,"setQuerySQL",new String [] {"java.lang.String"},new Object[] {querySQL});
         return;
     }
 
     public String getQuerySQL() {
-        Object _ret =
-            getApplicationModuleProxy().riInvokeExportedMethod(this,"getQuerySQL",null,null);
+        Object _ret = getApplicationModuleProxy().riInvokeExportedMethod(this,"getQuerySQL",null,null);
         return (String)_ret;
     }
 
-    public void setCamposAnualMensualBD() {
+    public void preparaQueryFinal(Integer celulaAgrup, ArrayList celulasExcepcion) {
         Object _ret =
-            getApplicationModuleProxy().riInvokeExportedMethod(this,"setCamposAnualMensualBD",null,null);
+            getApplicationModuleProxy().riInvokeExportedMethod(this,"preparaQueryFinal",new String [] {"java.lang.Integer","java.util.ArrayList"},new Object[] {celulaAgrup, celulasExcepcion});
         return;
     }
 
-    public void executeWithParamsEdit(BigDecimal seccion, BigDecimal celula,
-                                      Integer celulaAgrup,
-                                      ArrayList celulasExcepcion,
-                                      Integer anoRuptura,
-                                      Integer anosHistorico,
-                                      Integer hastaFecha) {
+    public void executeWithParamsEdit(BigDecimal seccion, BigDecimal celula, Integer anoRuptura, Integer anosHistorico, Integer hastaFecha,
+                                      Boolean desgloseMensual, Boolean mismoPeriodo, Boolean romperPorTurno, String[] turnos) {
         Object _ret =
-            getApplicationModuleProxy().riInvokeExportedMethod(this,"executeWithParamsEdit",new String [] {"java.math.BigDecimal","java.math.BigDecimal","java.lang.Integer","java.util.ArrayList","java.lang.Integer","java.lang.Integer","java.lang.Integer"},new Object[] {seccion, celula, celulaAgrup, celulasExcepcion, anoRuptura, anosHistorico, hastaFecha});
+            getApplicationModuleProxy().riInvokeExportedMethod(this,"executeWithParamsEdit",new String [] {"java.math.BigDecimal","java.math.BigDecimal","java.lang.Integer","java.lang.Integer","java.lang.Integer","java.lang.Boolean","java.lang.Boolean","java.lang.Boolean","[Ljava.lang.String;"},new Object[] {seccion, celula, anoRuptura, anosHistorico, hastaFecha, desgloseMensual, mismoPeriodo, romperPorTurno, turnos});
+        return;
+    }
+
+    public void executeWithParamsEdit(BigDecimal seccion, BigDecimal celula, Integer anoRuptura, Integer anosHistorico, Integer hastaFecha) {
+        Object _ret =
+            getApplicationModuleProxy().riInvokeExportedMethod(this,"executeWithParamsEdit",new String [] {"java.math.BigDecimal","java.math.BigDecimal","java.lang.Integer","java.lang.Integer","java.lang.Integer"},new Object[] {seccion, celula, anoRuptura, anosHistorico, hastaFecha});
         return;
     }
 }

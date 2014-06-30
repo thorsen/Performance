@@ -9,11 +9,14 @@
       <af:form id="f1">
         <af:panelGroupLayout id="pgl2">
           <af:panelFormLayout id="pfl1" rendered="#{adfFacesContext.outputMode != 'printable'}">
-            <af:inputNumberSpinbox label="#{viewcontrollerBundle.ANO_DE_RUPTURA}" id="ins1" minimum="1900" maximum="#{IshikawaBean.anoRupturaMax}" value="#{IshikawaBean.anoRuptura}"
-                                   autoSubmit="true"/>
+            <af:inputNumberSpinbox label="#{viewcontrollerBundle.ANO_DE_RUPTURA}" id="ins1" minimum="1900" maximum="#{IshikawaBean.anoRupturaMax}"
+                                   value="#{IshikawaBean.anoRuptura}" autoSubmit="true"/>
             <af:inputNumberSpinbox label="#{viewcontrollerBundle.ANOS_DE_HISTORICO}" id="ins2" minimum="1" maximum="10" value="#{IshikawaBean.anosHistorico}"/>
             <af:selectBooleanCheckbox text="#{viewcontrollerBundle.VISUALIZAR_A_MES_VENCIDO}" id="sbc2" binding="#{IshikawaBean.cbMesVencido}" selected="true"
                                       visible="#{IshikawaBean.anoRuptura == IshikawaBean.anoRupturaMax}" partialTriggers="ins1"/>
+            <af:selectBooleanCheckbox text="#{viewcontrollerBundle.MISMO_PERIODO_EN_ANOS_ANT}" id="sbc4" binding="#{IshikawaBean.cbMismoPeriodo}"
+                                      selected="false"/>
+            <af:selectBooleanCheckbox text="#{viewcontrollerBundle.VER_DESGLOSE_MENSUAL}" id="sbc5" binding="#{IshikawaBean.cbVerMensual}" selected="true"/>
             <af:selectOneChoice value="#{bindings.Ishikawa.inputValue}" label="#{bindings.Ishikawa.label}" required="#{bindings.Ishikawa.hints.mandatory}"
                                 shortDesc="#{bindings.Ishikawa.hints.tooltip}" id="soc1">
               <f:selectItems value="#{bindings.Ishikawa.items}" id="si1"/>
@@ -30,10 +33,15 @@
             </af:selectOneChoice>
             <af:selectBooleanCheckbox text="#{viewcontrollerBundle.SELECCIONAR_AGRUPACION_DE_CELULAS}" id="sbc1" value="#{IshikawaBean.mostrarCelulasAgrup}"
                                       visible="#{IshikawaBean.mostrarCheckCelulasAgrup}" partialTriggers="soc2" autoSubmit="true"/>
-            <af:selectOneChoice value="-1" label="#{viewcontrollerBundle.SELECCIONAR_AGRUPACION}" id="so5" autoSubmit="true" partialTriggers="sbc1"
+            <af:selectOneChoice value="-1" label="#{viewcontrollerBundle.SELECCIONAR_AGRUPACION}" id="soc5" autoSubmit="true" partialTriggers="sbc1"
                                 visible="#{IshikawaBean.mostrarCelulasAgrup}" binding="#{IshikawaBean.socCelulasAgrup}">
               <f:selectItems value="#{IshikawaBean.listaCelulasAgrup}" id="si6"/>
             </af:selectOneChoice>
+            <af:selectBooleanCheckbox text="#{viewcontrollerBundle.ROMPER_POR_TURNO}" id="sbc3" value="#{IshikawaBean.romperPorTurno}" autoSubmit="true"/>
+            <af:selectManyChoice value="#{IshikawaBean.turnosSelIndexes}" label="#{viewcontrollerBundle.SELECCIONAR_TURNO}" id="smc1" required="true"
+                                 requiredMessageDetail="#{viewcontrollerBundle.DEBE_SELECCIONAR_UN_TURNO}" autoSubmit="true">
+              <f:selectItems value="#{bindings.Turno.items}" id="si5"/>
+            </af:selectManyChoice>
             <af:commandButton text="#{viewcontrollerBundle.REFRESCAR_ISHIKAWA}" id="cb1" partialSubmit="true" action="#{IshikawaBean.refrescarIshikawa}"/>
           </af:panelFormLayout>
           <af:panelFormLayout id="pfl2" visible="false">

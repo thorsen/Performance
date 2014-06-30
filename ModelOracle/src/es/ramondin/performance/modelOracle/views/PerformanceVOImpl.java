@@ -19,8 +19,8 @@ import oracle.jbo.server.ViewObjectImpl;
 // ---------------------------------------------------------------------
 public class PerformanceVOImpl extends ViewObjectImpl implements PerformanceVO {
     public static final Integer INCLUIR_EXCEPCIONES = 0;
-    public static final Integer NO_INCLUIR_EXCEPCIONES = 5;
-    public static final Integer SOLO_EXCEPCIONES = 2;
+    public static final Integer NO_INCLUIR_EXCEPCIONES = -1;
+    public static final Integer SOLO_EXCEPCIONES = -2;
     
     private static final String TXT_CAMPO_ANUAL_BD = "SUM(NULL) AS PERF_DATO_ANUAL";
     private static final String TXT_CAMPO_MENSUAL_BD = "SUM(NULL) AS PERF_DATO_MENSUAL";
@@ -31,7 +31,51 @@ public class PerformanceVOImpl extends ViewObjectImpl implements PerformanceVO {
     public PerformanceVOImpl() {
     }
     
-    public void executeWithParamsEdit(BigDecimal seccion, BigDecimal celula, Integer celulaAgrup, ArrayList celulasExcepcion, Integer anoRuptura, Integer anosHistorico, Integer hastaFecha) {
+    public void executeWithParamsEdit(BigDecimal seccion, BigDecimal celula, Integer anoRuptura, Integer anosHistorico, Integer hastaFecha, Boolean desgloseMensual, 
+                                      Boolean mismoPeriodo, Boolean romperPorTurno, String[] turnos) {
+        Number seccionNumber = seccion == null ? null : new Number(seccion.intValue());
+        Number celulaNumber = celula == null ? null : new Number(celula.intValue());
+        String turnoTxt = null;
+        int turnosLength = turnos != null ? turnos.length : 0;
+        if (turnosLength > 0) {
+            turnoTxt = "";
+            for (int i = 0; i < turnosLength; i++) {
+                turnoTxt += turnos[i];
+            }
+        }
+
+        this.setPerfEmpresaBV(new Number(1));
+        this.setPerfSeccionBV(seccionNumber);
+        this.setPerfCelulaBV(celulaNumber);
+        this.setAnoRupturaBV(new Number(anoRuptura.intValue()));
+        this.setAnosHistoricoBV(new Number(anosHistorico.intValue()));
+        this.setHastaFechaBV(new Number(hastaFecha.intValue()));
+        this.setRomperPorTurnoBV(romperPorTurno ? 1 : 0);
+        this.setPerfTurnosBV(turnoTxt);
+        this.setVisualizarMensualBV(desgloseMensual ? 1 : 0);
+        this.setMismoPeriodoBV(mismoPeriodo ? 1 : 0);
+        
+        this.executeQuery();
+    }
+    
+    public void executeWithParamsEdit(BigDecimal seccion, BigDecimal celula, Integer anoRuptura, Integer anosHistorico, Integer hastaFecha) {
+        executeWithParamsEdit(seccion, celula, anoRuptura, anosHistorico, hastaFecha, true, false, false, null);
+    }
+    
+    public void setQuerySQL(String querySQL) {
+        this.setQuery(querySQL);
+    }
+
+    public String getQuerySQL() {
+        return this.getQuery();
+    }
+    
+    public void preparaQueryFinal(Integer celulaAgrup, ArrayList celulasExcepcion) {
+        setCamposAnualMensualBD();
+        ampliaWhere(celulaAgrup, celulasExcepcion);
+    }
+    
+    private void ampliaWhere(Integer celulaAgrup, ArrayList celulasExcepcion) {
         if (celulaAgrup != null) { //Es una agrupación
             //Si es INCLUIR_EXCEPCIONES no es necesario hacer ningún filtro
             if (!celulaAgrup.equals(INCLUIR_EXCEPCIONES) && celulasExcepcion != null) {
@@ -57,29 +101,9 @@ public class PerformanceVOImpl extends ViewObjectImpl implements PerformanceVO {
                 }
             }
         }
-        
-        Number seccionNumber = seccion == null ? null : new Number(seccion.intValue());
-        Number celulaNumber = celula == null ? null : new Number(celula.intValue());
-
-        this.setPerfEmpresaBV(new Number(1));
-        this.setPerfSeccionBV(seccionNumber);
-        this.setPerfCelulaBV(celulaNumber);
-        this.setAnoRupturaBV(new Number(anoRuptura.intValue()));
-        this.setAnosHistoricoBV(new Number(anosHistorico.intValue()));
-        this.setHastaFechaBV(new Number(hastaFecha.intValue()));
-        
-        this.executeQuery();
     }
     
-    public void setQuerySQL(String querySQL) {
-        this.setQuery(querySQL);
-    }
-
-    public String getQuerySQL() {
-        return this.getQuery();
-    }
-    
-    public void setCamposAnualMensualBD() {
+    private void setCamposAnualMensualBD() {
         ApplicationModule am = this.getApplicationModule();
         
         GraficoVOImpl graficoImp = (GraficoVOImpl)am.findViewObject("Grafico");
@@ -195,5 +219,70 @@ public class PerformanceVOImpl extends ViewObjectImpl implements PerformanceVO {
      */
     public void setHastaFechaBV(Number value) {
         setNamedWhereClauseParam("HastaFechaBV", value);
+    }
+
+    /**
+     * Returns the bind variable value for RomperPorTurnoBV.
+     * @return bind variable value for RomperPorTurnoBV
+     */
+    public Integer getRomperPorTurnoBV() {
+        return (Integer)getNamedWhereClauseParam("RomperPorTurnoBV");
+    }
+
+    /**
+     * Sets <code>value</code> for bind variable RomperPorTurnoBV.
+     * @param value value to bind as RomperPorTurnoBV
+     */
+    public void setRomperPorTurnoBV(Integer value) {
+        setNamedWhereClauseParam("RomperPorTurnoBV", value);
+    }
+
+
+    /**
+     * Returns the bind variable value for PerfTurnosBV.
+     * @return bind variable value for PerfTurnosBV
+     */
+    public String getPerfTurnosBV() {
+        return (String)getNamedWhereClauseParam("PerfTurnosBV");
+    }
+
+    /**
+     * Sets <code>value</code> for bind variable PerfTurnosBV.
+     * @param value value to bind as PerfTurnosBV
+     */
+    public void setPerfTurnosBV(String value) {
+        setNamedWhereClauseParam("PerfTurnosBV", value);
+    }
+
+    /**
+     * Returns the bind variable value for VisualizarMensualBV.
+     * @return bind variable value for VisualizarMensualBV
+     */
+    public Integer getVisualizarMensualBV() {
+        return (Integer)getNamedWhereClauseParam("VisualizarMensualBV");
+    }
+
+    /**
+     * Sets <code>value</code> for bind variable VisualizarMensualBV.
+     * @param value value to bind as VisualizarMensualBV
+     */
+    public void setVisualizarMensualBV(Integer value) {
+        setNamedWhereClauseParam("VisualizarMensualBV", value);
+    }
+
+    /**
+     * Returns the bind variable value for MismoPeriodoBV.
+     * @return bind variable value for MismoPeriodoBV
+     */
+    public Integer getMismoPeriodoBV() {
+        return (Integer)getNamedWhereClauseParam("MismoPeriodoBV");
+    }
+
+    /**
+     * Sets <code>value</code> for bind variable MismoPeriodoBV.
+     * @param value value to bind as MismoPeriodoBV
+     */
+    public void setMismoPeriodoBV(Integer value) {
+        setNamedWhereClauseParam("MismoPeriodoBV", value);
     }
 }

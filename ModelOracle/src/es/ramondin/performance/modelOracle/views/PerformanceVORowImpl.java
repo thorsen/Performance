@@ -74,6 +74,16 @@ public class PerformanceVORowImpl extends ViewRowImpl {
             }
         }
         ,
+        PerfTurno {
+            public Object get(PerformanceVORowImpl obj) {
+                return obj.getPerfTurno();
+            }
+
+            public void put(PerformanceVORowImpl obj, Object value) {
+                obj.setPerfTurno((String)value);
+            }
+        }
+        ,
         PerfDatoAnual {
             public Object get(PerformanceVORowImpl obj) {
                 return obj.getPerfDatoAnual();
@@ -128,6 +138,7 @@ public class PerformanceVORowImpl extends ViewRowImpl {
     public static final int PERFEMPRESA = AttributesEnum.PerfEmpresa.index();
     public static final int PERFSECCION = AttributesEnum.PerfSeccion.index();
     public static final int PERFCELULA = AttributesEnum.PerfCelula.index();
+    public static final int PERFTURNO = AttributesEnum.PerfTurno.index();
     public static final int PERFDATOANUAL = AttributesEnum.PerfDatoAnual.index();
     public static final int PERFDATOMENSUAL = AttributesEnum.PerfDatoMensual.index();
 
@@ -231,6 +242,22 @@ public class PerformanceVORowImpl extends ViewRowImpl {
      */
     public void setPerfCelula(Number value) {
         setAttributeInternal(PERFCELULA, value);
+    }
+
+    /**
+     * Gets the attribute value for the calculated attribute PerfTurno.
+     * @return the PerfTurno
+     */
+    public String getPerfTurno() {
+        return (String) getAttributeInternal(PERFTURNO);
+    }
+
+    /**
+     * Sets <code>value</code> as the attribute value for the calculated attribute PerfTurno.
+     * @param value value to set the  PerfTurno
+     */
+    public void setPerfTurno(String value) {
+        setAttributeInternal(PERFTURNO, value);
     }
 
     /**

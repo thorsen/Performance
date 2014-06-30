@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<!DOCTYPE ViewObject SYSTEM "jbo_03_01.dtd">
+<!---->
+<ViewObject
+  xmlns="http://xmlns.oracle.com/bc4j"
+  Name="CelulaVO"
+  Version="11.1.1.64.93"
+  InheritPersonalization="true"
+  OrderBy="MVAR_SECCION_13, MVAR_SECUEN_13"
+  BindingStyle="JDBC"
+  CustomQuery="true"
+  FetchMode="FETCH_AS_NEEDED"
+  PageIterMode="Full"
+  UseGlueCode="false">
+  <DesignTime>
+    <Attr Name="_isExpertMode" Value="true"/>
+  </DesignTime>
+  <Properties>
+    <SchemaBasedProperties>
+      <LABEL
+        ResId="es.ramondin.performance.model.views.CelulaVO_LABEL"/>
+    </SchemaBasedProperties>
+  </Properties>
+  <SQLQuery>
+    <![CDATA[SELECT MVAR_SECUEN_13, MVAR_SECCION_13, MVAR_DESCEL_13
+FROM FFABMVAR_13
+WHERE MVAR_CLAVE_13 = 13
+AND MVAR_SECUEN_13 > 0]]>
+  </SQLQuery>
+  <ViewAttribute
+    Name="MvarSecuen13"
+    IsUpdateable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="java.math.BigDecimal"
+    ColumnType="BIGINT"
+    AliasName="MVAR_SECUEN_13"
+    Expression="MVAR_SECUEN_13"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="8"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="MvarSeccion13"
+    IsUpdateable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="3"
+    Scale="0"
+    Type="java.math.BigDecimal"
+    ColumnType="M"
+    AliasName="MVAR_SECCION_13"
+    Expression="MVAR_SECCION_13"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="5"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="MvarDescel13"
+    IsUpdateable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="25"
+    Type="java.lang.String"
+    ColumnType="M"
+    AliasName="MVAR_DESCEL_13"
+    Expression="MVAR_DESCEL_13"
+    SQLType="VARCHAR">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="25"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="DescCelulaTrans"
+    IsUpdateable="false"
+    IsSelected="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="java.lang.String"
+    ColumnType="VARCHAR2"
+    AliasName="VIEW_ATTR"
+    SQLType="VARCHAR">
+    <RecalcCondition><![CDATA[true]]></RecalcCondition>
+    <TransientExpression><![CDATA[MvarSecuen13 + " - " + MvarDescel13]]></TransientExpression>
+    <Dependencies>
+      <Item
+        Value="MvarDescel13"/>
+      <Item
+        Value="MvarSecuen13"/>
+    </Dependencies>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.performance.model.views.CelulaVO.DescCelulaTrans_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <AttrArray Name="KeyAttributes">
+    <Item Value="MvarSecuen13"/>
+  </AttrArray>
+  <ResourceBundle>
+    <PropertiesBundle
+      PropertiesFile="es.ramondin.performance.model.resources.ModelBundle"/>
+  </ResourceBundle>
+</ViewObject>

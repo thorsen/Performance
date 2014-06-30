@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1" xmlns:f="http://java.sun.com/jsf/core" xmlns:af="http://xmlns.oracle.com/adf/faces/rich"
+          xmlns:Grafico="/GraficoLib" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:Mosaico="/MosaicoLib">
+  <c:set var="viewcontrollerBundle" value="#{adfBundle['es.ramondin.performance.view.resources.ViewControllerBundle']}"/>
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+  <f:view>
+    <af:document id="d1" title="Panel">
+      <af:messages id="m1"/>
+      <af:form id="f1">
+        <af:panelGroupLayout id="pgl2">
+          <af:panelFormLayout id="pfl1" rendered="#{adfFacesContext.outputMode != 'printable'}">
+            <af:inputNumberSpinbox label="#{viewcontrollerBundle.ANO_DE_RUPTURA}" id="ins1" minimum="1900" maximum="#{PanelBean.anoRupturaMax}"
+                                   value="#{PanelBean.anoRuptura}" autoSubmit="true"/>
+            <af:inputNumberSpinbox label="#{viewcontrollerBundle.ANOS_DE_HISTORICO}" id="ins2" minimum="1" maximum="10" value="#{PanelBean.anosHistorico}"/>
+            <af:selectBooleanCheckbox text="#{viewcontrollerBundle.VISUALIZAR_A_MES_VENCIDO}" id="sbc2" binding="#{PanelBean.cbMesVencido}" selected="true"
+                                      visible="#{PanelBean.anoRuptura == PanelBean.anoRupturaMax}" partialTriggers="ins1"/>
+            <af:selectBooleanCheckbox text="#{viewcontrollerBundle.MISMO_PERIODO_EN_ANOS_ANT}" id="sbc4" binding="#{PanelBean.cbMismoPeriodo}"
+                                      selected="false"/>
+            <af:selectBooleanCheckbox text="#{viewcontrollerBundle.VER_DESGLOSE_MENSUAL}" id="sbc5" binding="#{PanelBean.cbVerMensual}" selected="true"/>
+            <af:selectOneChoice value="#{bindings.Panel.inputValue}" label="#{bindings.Panel.label}" required="#{bindings.Panel.hints.mandatory}"
+                                shortDesc="#{bindings.Panel.hints.tooltip}" id="soc1">
+              <f:selectItems value="#{bindings.Panel.items}" id="si1"/>
+            </af:selectOneChoice>
+            <af:selectOneChoice value="#{bindings.Seccion.inputValue}" label="#{bindings.Seccion.label}" required="#{bindings.Seccion.hints.mandatory}"
+                                shortDesc="#{bindings.Seccion.hints.tooltip}" id="soc2" autoSubmit="true"
+                                valueChangeListener="#{PanelBean.valueChangeListenerSeccion}">
+              <f:selectItems value="#{bindings.Seccion.items}" id="si2"/>
+            </af:selectOneChoice>
+            <af:selectOneChoice value="#{bindings.Celula.inputValue}" label="#{bindings.Celula.label}" required="#{bindings.Celula.hints.mandatory}"
+                                shortDesc="#{bindings.Celula.hints.tooltip}" id="soc3" autoSubmit="true" partialTriggers="soc2 sbc1"
+                                binding="#{PanelBean.socCelulas}" disabled="#{PanelBean.mostrarCelulasAgrup}">
+              <f:selectItems value="#{bindings.Celula.items}" id="si3"/>
+            </af:selectOneChoice>
+            <af:selectBooleanCheckbox text="#{viewcontrollerBundle.SELECCIONAR_AGRUPACION_DE_CELULAS}" id="sbc1" value="#{PanelBean.mostrarCelulasAgrup}"
+                                      visible="#{PanelBean.mostrarCheckCelulasAgrup}" partialTriggers="soc2" autoSubmit="true"/>
+            <af:selectOneChoice value="-1" label="#{viewcontrollerBundle.SELECCIONAR_AGRUPACION}" id="soc5" autoSubmit="true" partialTriggers="sbc1"
+                                visible="#{PanelBean.mostrarCelulasAgrup}" binding="#{PanelBean.socCelulasAgrup}">
+              <f:selectItems value="#{PanelBean.listaCelulasAgrup}" id="si6"/>
+            </af:selectOneChoice>
+            <af:selectBooleanCheckbox text="#{viewcontrollerBundle.ROMPER_POR_TURNO}" id="sbc3" value="#{PanelBean.romperPorTurno}" autoSubmit="true"/>
+            <af:selectManyChoice value="#{PanelBean.turnosSelIndexes}" label="#{viewcontrollerBundle.SELECCIONAR_TURNO}" id="smc1" required="true"
+                                 requiredMessageDetail="#{viewcontrollerBundle.DEBE_SELECCIONAR_UN_TURNO}" autoSubmit="true">
+              <f:selectItems value="#{bindings.Turno.items}" id="si5"/>
+            </af:selectManyChoice>
+            <af:commandButton text="#{viewcontrollerBundle.REFRESCAR_PANEL}" id="cb1" partialSubmit="true" action="#{PanelBean.refrescarPanel}"/>
+          </af:panelFormLayout>
+          <af:panelFormLayout id="pfl2" visible="false">
+            <Grafico:CompDecGrafico id="cdg1" binding="#{PanelBean.cdGrafico}" descargaDirecta="false" inLineStyleComp="width:841px;height:595px"
+                                    autoPrecisionType="off" scalingType="none" renderMarkerText="true" sizeMarkerText="12"
+                                    formatoSalida="#{PanelBean.formatoSalida}" printWidth="1315" printHeight="930" printRutaDestino="#{PanelBean.rutaDestino}"/>
+          </af:panelFormLayout>
+          <Mosaico:CompDecMosaico id="cdm1" tituloPanel="Panel" numColumnas="#{PanelBean.numColumnas}" numFilas="#{PanelBean.numFilas}"
+                                  arrayComponentes="#{PanelBean.arrayComponentes}" arrayPosiciones="#{PanelBean.arrayPosiciones}"
+                                  arrayHAlignComps="#{PanelBean.arrayHAlignComps}" arrayVAlignComps="#{PanelBean.arrayVAlignComps}"
+                                  arrayColSpanComps="#{PanelBean.arrayColSpanComps}" arrayRowSpanComps="#{PanelBean.arrayRowSpanComps}"
+                                  binding="#{PanelBean.cdMosaico}"/>
+        </af:panelGroupLayout>
+      </af:form>
+    </af:document>
+  </f:view>
+</jsp:root>

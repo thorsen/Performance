@@ -5,6 +5,7 @@ import component.CompDecGraficoComponent;
 import es.ramondin.Encriptacion;
 import es.ramondin.compdec.grafico.view.beans.GraficoBean;
 import es.ramondin.compdec.grafico.view.util.GraficoUtil;
+import es.ramondin.performance.modelOracle.views.MarkerVOImpl;
 import es.ramondin.performance.modelOracle.views.PerformanceVOImpl;
 import es.ramondin.utilidades.JSFUtils;
 
@@ -59,12 +60,14 @@ import oracle.binding.OperationBinding;
 
 import oracle.jbo.Key;
 import oracle.jbo.domain.Number;
+import oracle.jbo.uicli.binding.JUCtrlListBinding;
 
 public class IshikawaBean {
     private Integer anoRuptura = this.ANO_RUPTURA_MAX;
     private Integer anosHistorico = 5;
     private RichSelectBooleanCheckbox cbMesVencido;
     private Boolean mostrarCelulasAgrup;
+    private Boolean romperPorTurno;
     private List listaCelulasAgrup;
     private RichSelectOneChoice socCelulas;
     private RichSelectOneChoice socCelulasAgrup;
@@ -72,17 +75,22 @@ public class IshikawaBean {
     private RichDeclarativeComponent cdGrafico;
     private String rutaDestino;
     private String rutaFicheroXSL;
+    private RichSelectBooleanCheckbox cbMismoPeriodo;
+    private RichSelectBooleanCheckbox cbVerMensual;
+    private Integer[] turnosSelIndexes;
+    private oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel graphModel;
 
+    private static final int ALTO_FINAL_MAX = (int)((297 - 2*13.9) * 4);
+    private static final int ANCHO_FINAL_MAX = (int)((420 - 2*12.7) * 4);
     private static final int MAX_CAUSAS_POR_FILA = 3;
     private static final int MIN_NUM_FILAS = 3;
-    private static final int ANCHO_GRAF_CAUSA = 300;
-    private static final int ALTO_GRAF_CAUSA = ANCHO_GRAF_CAUSA * 3 / 4;
-    private static final int ANCHO_GRAF_EFECTO = ANCHO_GRAF_CAUSA;
-    private static final int ALTO_GRAF_EFECTO = ANCHO_GRAF_EFECTO * 3 / 4;
+    private static int ANCHO_GRAF = 300;
+    private static int ALTO_GRAF = (int)(ANCHO_GRAF * 3.0 / 4.0);
     private static final int ANCHO_SEPARADOR = 3;
     private static final int ALTO_SEPARADOR = 15;
     private static final int ANCHO_FLECHA = 4 * ANCHO_SEPARADOR;
     private static final int MARGEN_GRAFICO = 3;
+    private static int ESPACIO_GRAFICO = 12;
     private static final int ALTO_VACIO = 1;
 
     private static final String[] HTML_COLORES = new String[] { "#097054", "#6599FF", "#FFDE00", "#FF9900", "#443266", "#C3C3E5", "#F1F0FF", "#8C489F" };
@@ -229,9 +237,6 @@ public class IshikawaBean {
         operation = this.getBindings().getOperationBinding("getQuerySQL");
         String queryOrig = (String)operation.execute();
 
-        operation = this.getBindings().getOperationBinding("setCamposAnualMensualBD");
-        operation.execute();
-
         operation = this.getBindings().getOperationBinding("getTipoEjeY");
         map.put("convNumberTypeY1", operation.execute());
 
@@ -240,6 +245,9 @@ public class IshikawaBean {
 
         operation = this.getBindings().getOperationBinding("getMaxDecimales");
         map.put("maxFractionDigitsY1", ((Number)operation.execute()).intValue());
+        
+        operation = this.getBindings().getOperationBinding("getTituloEjeY");
+        map.put("tituloEjeY1", operation.execute());
 
         Integer seccion = (Integer)JSFUtils.resolveExpression("#{bindings.MvarSecuen3.attributeValue}");
 
@@ -276,14 +284,23 @@ public class IshikawaBean {
 
         Integer hastaFecha = Integer.parseInt((new SimpleDateFormat("yyyyMMdd")).format(gcAux.getTime()));
 
+        JUCtrlListBinding turnosLista = (JUCtrlListBinding)this.getBindings().get("Turno");
+        
+        operation = this.getBindings().getOperationBinding("preparaQueryFinal");
+        operation.getParamsMap().put("celulaAgrup", celulaAgrup);
+        operation.getParamsMap().put("celulasExcepcion", celulasExcepcion);
+        operation.execute();
+
         operation = this.getBindings().getOperationBinding("executeWithParamsEdit");
         operation.getParamsMap().put("seccion", seccion);
         operation.getParamsMap().put("celula", celula);
-        operation.getParamsMap().put("celulaAgrup", celulaAgrup);
-        operation.getParamsMap().put("celulasExcepcion", celulasExcepcion);
         operation.getParamsMap().put("anoRuptura", gcAux.get(GregorianCalendar.YEAR));
         operation.getParamsMap().put("anosHistorico", this.getAnosHistorico());
         operation.getParamsMap().put("hastaFecha", hastaFecha);
+        operation.getParamsMap().put("desgloseMensual", this.cbVerMensual.isSelected());
+        operation.getParamsMap().put("mismoPeriodo", this.cbMismoPeriodo.isSelected());
+        operation.getParamsMap().put("romperPorTurno", this.romperPorTurno);
+        operation.getParamsMap().put("turnos", turnosLista.getSelectedValues());
         operation.execute();
 
         //Restablecemos la query
@@ -291,15 +308,139 @@ public class IshikawaBean {
         operation.getParamsMap().put("querySQL", queryOrig);
         operation.execute();
 
-
         //Preparamos el gráfico
-        operation = this.getBindings().getOperationBinding("getValorMarkers");
-        operation.getParamsMap().put("desdeFecha", null);
-        map.put("arrayValorMarkers", operation.execute());
-
+        String tipoMarkerSeriesSetAux = null;
+        String[] tipoMarkerSeriesAux = null;
+        oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel graphModelAux = null;
+        
+        if (this.cbVerMensual.isSelected()) {
+            tipoMarkerSeriesSetAux = "MT_DEFAULT";
+            tipoMarkerSeriesAux = new String[]{"MT_BAR", "MT_MARKER"};
+            
+            if (romperPorTurno)
+                graphModelAux = (oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel)JSFUtils.resolveExpression("#{bindings.PerformanceTurnos.graphModel}");
+            else
+                graphModelAux = (oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel)JSFUtils.resolveExpression("#{bindings.Performance.graphModel}");
+        } else {
+            tipoMarkerSeriesSetAux = "MT_BAR";
+            tipoMarkerSeriesAux = new String[]{"MT_BAR"};
+            
+            if (romperPorTurno)
+                graphModelAux = (oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel)JSFUtils.resolveExpression("#{bindings.PerformanceSinMensualTurnos.graphModel}");
+            else
+                graphModelAux = (oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel)JSFUtils.resolveExpression("#{bindings.PerformanceSinMensual.graphModel}");
+        }
+        
+        map.put("graphModel", graphModelAux);
+        map.put("tipoMarkerSeriesSet", tipoMarkerSeriesSetAux);
+        map.put("arrayTipoMarkerSeries", tipoMarkerSeriesAux);
+        
+        Number sentidoMejor;
         operation = this.getBindings().getOperationBinding("getSentidoMejor");
+        sentidoMejor = (Number)operation.execute();
+        map.put("sentidoMejor", new Integer(sentidoMejor.intValue()));
+        
+        operation = this.getBindings().getOperationBinding("cargaMarkers");
+        operation.getParamsMap().put("idSeccion", seccion);
+        operation.getParamsMap().put("idCelula", celula != null ? celula : celulaAgrup);
         operation.getParamsMap().put("desdeFecha", null);
-        map.put("sentidoMejor", new Integer(((Number)operation.execute()).intValue()));
+        operation.getParamsMap().put("sentidoMejor", sentidoMejor);
+        operation.execute();
+        
+        operation = this.getBindings().getOperationBinding("getTextoMarkers");
+        String[] textoMarkersAux = (String[])operation.execute();
+        
+        operation = this.getBindings().getOperationBinding("getValorMarkers");
+        Double[] valorMarkersAux = (Double[])operation.execute();
+        
+        operation = this.getBindings().getOperationBinding("getColorMarkers");
+        String[] colorMarkersAux = (String[])operation.execute();
+        
+        //Markers especiales
+        //Establecemos la query
+        operation = this.getBindings().getOperationBinding("cargaMarkersEsp");
+        operation.getParamsMap().put("seccion", seccion);
+        operation.getParamsMap().put("celula", celula);
+        operation.getParamsMap().put("celulaAgrup", celulaAgrup);
+        operation.getParamsMap().put("celulasExcepcion", celulasExcepcion);
+        operation.getParamsMap().put("anoRuptura", gcAux.get(GregorianCalendar.YEAR));
+        operation.getParamsMap().put("anosHistorico", 10);
+        operation.getParamsMap().put("hastaFecha", hastaFecha);
+        operation.getParamsMap().put("desgloseMensual", this.cbVerMensual.isSelected());
+        operation.getParamsMap().put("mismoPeriodo", this.cbMismoPeriodo.isSelected());
+        operation.getParamsMap().put("romperPorTurno", this.romperPorTurno);
+        operation.getParamsMap().put("turnos", turnosLista.getSelectedValues());
+        operation.execute();
+        
+        operation = this.getBindings().getOperationBinding("getTextoMarkersEsp");
+        String[] textoMarkersEsp = (String[])operation.execute();
+        
+        operation = this.getBindings().getOperationBinding("getValorMarkersEsp");
+        Double[] valorMarkersEsp = (Double[])operation.execute();
+        
+        operation = this.getBindings().getOperationBinding("getColorMarkersEsp");
+        String[] colorMarkersEsp = (String[])operation.execute();
+        
+        int numValorMarkersAux = valorMarkersAux != null ? valorMarkersAux.length : 0;
+        int numValorMarkersEsp =  valorMarkersEsp != null ? valorMarkersEsp.length : 0;
+        Double[] valorMarkersFinal = null;
+        String[] textoMarkersFinal = null;
+        String[] colorMarkersFinal = null;
+        
+        if (numValorMarkersAux + numValorMarkersEsp > 0) {
+            String textoAux = null;
+            String colorAux = null;
+            int pos = -1;
+            
+            valorMarkersFinal = new Double[numValorMarkersAux + numValorMarkersEsp];
+            textoMarkersFinal = new String[numValorMarkersAux + numValorMarkersEsp];
+            colorMarkersFinal = new String[numValorMarkersAux + numValorMarkersEsp];
+            
+            for (int i = 0; i < valorMarkersFinal.length; i++) {
+                if (i < numValorMarkersAux) {
+                    valorMarkersFinal[i] = valorMarkersAux[i];
+                    
+                    textoAux = textoMarkersAux[i];
+                    if (textoAux != null && textoAux.contains(MarkerVOImpl.TXT_TEXTO_DEF)) {
+                        pos = -1;
+                        try {
+                            pos = Integer.parseInt(textoAux.substring(MarkerVOImpl.TXT_TEXTO_DEF.length()));
+                        } catch (NumberFormatException ex) {
+                            ex.getMessage();    
+                        }
+                        
+                        if (pos >= 0  && pos < GraficoUtil.TEXTO_MARKERS_DEF.length)
+                            textoAux = GraficoUtil.TEXTO_MARKERS_DEF[pos];
+                        else
+                            textoAux = null;
+                    }
+                    textoMarkersFinal[i] = textoAux;
+                    
+                    colorAux = colorMarkersAux[i];
+                    if (colorAux != null && colorAux.contains(MarkerVOImpl.TXT_COLOR_DEF)) {
+                        pos = -1;
+                        try {
+                            pos = Integer.parseInt(colorAux.substring(MarkerVOImpl.TXT_COLOR_DEF.length()));
+                        } catch (NumberFormatException ex) {
+                            ex.getMessage();    
+                        }
+                        
+                        if (pos >= 0  && pos < GraficoUtil.COLOR_MARKERS_DEF.length)
+                            colorAux = GraficoUtil.COLOR_MARKERS_DEF[pos];
+                        else
+                            colorAux = null;
+                    }
+                    colorMarkersFinal[i] = colorAux;
+                } else {
+                    valorMarkersFinal[i] = valorMarkersEsp[i - numValorMarkersAux];
+                    textoMarkersFinal[i] = textoMarkersEsp[i - numValorMarkersAux];
+                    colorMarkersFinal[i] = colorMarkersEsp[i - numValorMarkersAux];
+                }
+            }
+        }
+        map.put("arrayValorMarkers", valorMarkersFinal);
+        map.put("arrayTextoMarkers", textoMarkersFinal);
+        map.put("arrayColorMarkers", colorMarkersFinal);
 
         map.put("titulo", JSFUtils.resolveExpression("#{bindings.MgraTitulo.attributeValue}"));
         map.put("subtitulo", JSFUtils.resolveExpression("#{bindings.MgraSubtitulo.attributeValue}"));
@@ -334,9 +475,9 @@ public class IshikawaBean {
 
             rai.setSource(getRutaGrafico(generaPixel(color)));
         }
-
+        
         rai.setInlineStyle(inlineStyleOri);
-
+        
         rpgl.getChildren().add(rai);
 
         celda.getChildren().add(rpgl);
@@ -382,7 +523,7 @@ public class IshikawaBean {
             rai.setSource(source);
         if (inlineStyle != null)
             rai.setInlineStyle(inlineStyle);
-
+        
         rpgl.getChildren().add(rai);
 
         celda.getChildren().add(rpgl);
@@ -414,7 +555,16 @@ public class IshikawaBean {
 
         if (numFilas < MIN_NUM_FILAS)
             numFilas = MIN_NUM_FILAS;
-
+        
+        //Recalculamos los tamaños para maximizar el espacio
+        Double altoGrafAux = (ALTO_FINAL_MAX - (numFilas - 1) * ALTO_SEPARADOR - numFilas * 2 * MARGEN_GRAFICO - 2 * ANCHO_FLECHA) / (1.0*numFilas);
+        Double anchoGrafAux = altoGrafAux * 4.0 / 3.0;
+                                                                                                                                  
+        ALTO_GRAF = (int)(Math.floor(altoGrafAux));
+        ANCHO_GRAF = (int)(Math.ceil(anchoGrafAux));
+        
+        ESPACIO_GRAFICO = (int)(Math.ceil((ANCHO_FINAL_MAX - ANCHO_GRAF - 2 * MARGEN_GRAFICO - ANCHO_FLECHA) / (1.0*numCausas)));
+        
         //Cogemos el compenente declarativo y su gráfico interno
         CompDecGraficoComponent cdgc = (CompDecGraficoComponent)this.cdGrafico;
         Map<String, Object> map = cdgc.getAttributes();
@@ -499,8 +649,8 @@ public class IshikawaBean {
 
                         if (j % (numFilas - 1) == i && j < numCausas) {
                             rgCell =
-                                    anadeGrafico(rgCell, titulosCausas.get(j), getRutaGrafico(rutasCausas.get(j)), "width:" + ANCHO_GRAF_CAUSA + "px; height:" +
-                                                 ALTO_GRAF_CAUSA + "px; outline-color:" + HTML_COLORES[i % HTML_COLORES.length] +
+                                    anadeGrafico(rgCell, titulosCausas.get(j), getRutaGrafico(rutasCausas.get(j)), "width:" + ANCHO_GRAF + "px; height:" +
+                                                 ALTO_GRAF + "px; outline-color:" + HTML_COLORES[i % HTML_COLORES.length] +
                                                  "; outline-style:solid; outline-widht:" + MARGEN_GRAFICO + "px; margin:" + MARGEN_GRAFICO + "px;", null);
 
                             colSpan = numFilas - 1;
@@ -521,13 +671,13 @@ public class IshikawaBean {
 
                             if (mostrarLinea != -1)
                                 rgCell =
-                                        anadeEspacio(rgCell, ANCHO_SEPARADOR, 2 * MARGEN_GRAFICO + ALTO_GRAF_CAUSA, "background-color:" + HTML_COLORES[mostrarLinea %
-                                                     HTML_COLORES.length] + ";", ANCHO_GRAF_CAUSA / 6);
+                                        anadeEspacio(rgCell, ANCHO_SEPARADOR, 2 * MARGEN_GRAFICO + ALTO_GRAF, "background-color:" + HTML_COLORES[mostrarLinea %
+                                                     HTML_COLORES.length] + ";", ANCHO_GRAF / 6);
                             else {
-                                if (j == numCausas)
+                                if (j >= numCausas)
                                     rgCell = anadeEspacio(rgCell, ANCHO_FLECHA, ALTO_VACIO, null, null);
                                 else
-                                    rgCell = anadeEspacio(rgCell, (ANCHO_GRAF_CAUSA + 2 * MARGEN_GRAFICO) / (numFilas - 1), ALTO_VACIO, null, null);
+                                    rgCell = anadeEspacio(rgCell, ESPACIO_GRAFICO, ALTO_VACIO, null, null);
                             }
                         }
 
@@ -545,7 +695,7 @@ public class IshikawaBean {
                         rgCell.setHalign(RichGridCell.HALIGN_START);
 
                         rgCell =
-                                anadeEspacio(rgCell, (ANCHO_GRAF_CAUSA + 4 * MARGEN_GRAFICO) / (numFilas - 1), ANCHO_SEPARADOR, "background-color:#000000;", null);
+                                anadeEspacio(rgCell, ESPACIO_GRAFICO, ANCHO_SEPARADOR, "background-color:#000000;", null);
 
                         columnas.add(rgCell);
                     }
@@ -577,11 +727,11 @@ public class IshikawaBean {
                 if (mostrarLinea != -1)
                     rgCell =
                             anadeEspacio(rgCell, ANCHO_SEPARADOR, ALTO_SEPARADOR, "background-color:" + HTML_COLORES[mostrarLinea % HTML_COLORES.length] + ";",
-                                         ANCHO_GRAF_CAUSA / 6);
-                else if (j == numCausas)
+                                         ANCHO_GRAF / 6);
+                else if (j >= numCausas)
                     rgCell = anadeEspacio(rgCell, ANCHO_FLECHA, ALTO_VACIO, null, null);
                 else
-                    rgCell = anadeEspacio(rgCell, (ANCHO_GRAF_CAUSA + 2 * MARGEN_GRAFICO) / (numFilas - 1), ALTO_VACIO, null, null);
+                    rgCell = anadeEspacio(rgCell, ESPACIO_GRAFICO, ALTO_VACIO, null, null);
 
                 columnas.add(rgCell);
             }
@@ -610,12 +760,12 @@ public class IshikawaBean {
 
                 if (mostrarLinea != -1)
                     rgCell =
-                            anadeEspacio(rgCell, ANCHO_SEPARADOR, (2 * MARGEN_GRAFICO + ALTO_GRAF_EFECTO) / 2, "background-color:" + HTML_COLORES[mostrarLinea %
-                                         HTML_COLORES.length] + ";", ANCHO_GRAF_CAUSA / 6);
-                else if (j == numCausas)
+                            anadeEspacio(rgCell, ANCHO_SEPARADOR, (2 * MARGEN_GRAFICO + ALTO_GRAF) / 2, "background-color:" + HTML_COLORES[mostrarLinea %
+                                         HTML_COLORES.length] + ";", ANCHO_GRAF / 6);
+                else if (j >= numCausas)
                     rgCell = anadeEspacio(rgCell, ANCHO_FLECHA, ALTO_VACIO, null, null);
                 else
-                    rgCell = anadeEspacio(rgCell, (ANCHO_GRAF_CAUSA + 2 * MARGEN_GRAFICO) / (numFilas - 1), ALTO_VACIO, null, null);
+                    rgCell = anadeEspacio(rgCell, ESPACIO_GRAFICO, ALTO_VACIO, null, null);
 
                 columnas.add(rgCell);
             }
@@ -627,8 +777,8 @@ public class IshikawaBean {
                 rgCell.setHalign(RichGridCell.HALIGN_START);
 
                 rgCell =
-                        anadeGrafico(rgCell, titulosCausas.get(titulosCausas.size() - 1), getRutaGrafico(rutasCausas.get(rutasCausas.size() - 1)), "width:" + ANCHO_GRAF_EFECTO +
-                                     "px; height:" + ALTO_GRAF_EFECTO + "px; outline-color:#000000; outline-style:solid; outline-widht:" + MARGEN_GRAFICO +
+                        anadeGrafico(rgCell, titulosCausas.get(titulosCausas.size() - 1), getRutaGrafico(rutasCausas.get(rutasCausas.size() - 1)), "width:" + ANCHO_GRAF +
+                                     "px; height:" + ALTO_GRAF + "px; outline-color:#000000; outline-style:solid; outline-widht:" + MARGEN_GRAFICO +
                                      "px; margin:" + MARGEN_GRAFICO + "px;", null);
                 rgCell.setRowSpan(5);
                 rgCell.setColumnSpan(numFilas - 1);
@@ -664,11 +814,11 @@ public class IshikawaBean {
                     if (mostrarLinea != -1)
                         rgCell =
                                 anadeGrafico(rgCell, null, getRutaGrafico(generaFlecha(HTML_COLORES[mostrarLinea % HTML_COLORES.length], i % 2 == 0 ? 270 : 90)),
-                                             null, ANCHO_GRAF_CAUSA / 6 - ANCHO_FLECHA / 2 + ANCHO_SEPARADOR / 2);
+                                             null, ANCHO_GRAF / 6 - ANCHO_FLECHA / 2 + ANCHO_SEPARADOR / 2);
                     else if (j == numCausas)
                         continue;
                     else
-                        rgCell = anadeEspacio(rgCell, (ANCHO_GRAF_CAUSA + 2 * MARGEN_GRAFICO) / (numFilas - 1), ALTO_VACIO, null, null);
+                        rgCell = anadeEspacio(rgCell, ESPACIO_GRAFICO, ALTO_VACIO, null, null);
                 }
 
                 columnas.add(rgCell);
@@ -692,7 +842,7 @@ public class IshikawaBean {
         }
 
         //Añadimos el efecto
-        int posAnadir = 2 * ((Double)Math.ceil((numFilas - 1) / 2.0)).intValue();
+        int posAnadir = 2 * (int)(Math.ceil((numFilas - 1) / 2.0));
 
         filas.add(posAnadir, filasEfecto.get(0)); //Linea que contiene el gráfico con span
         filas.add(posAnadir + 1, filasEfecto.get(1)); //Linea que contiene las flechas verticales superiores y horizontal
@@ -830,5 +980,65 @@ public class IshikawaBean {
 
     public String getRutaFicheroXSL() {
         return rutaFicheroXSL;
+    }
+    
+    public void setCbMismoPeriodo(RichSelectBooleanCheckbox cbMismoPeriodo) {
+        this.cbMismoPeriodo = cbMismoPeriodo;
+    }
+
+    public RichSelectBooleanCheckbox getCbMismoPeriodo() {
+        return cbMismoPeriodo;
+    }
+
+    public void setTurnosSelIndexes(Integer[] turnosSelIndexes) {
+        this.turnosSelIndexes = turnosSelIndexes;
+        
+        JUCtrlListBinding turnosLista = (JUCtrlListBinding)this.getBindings().get("Turno");
+        if (turnosSelIndexes != null) {
+            int[] turnosSelIndexesInt = new int[turnosSelIndexes.length];
+            for (int i = 0; i < turnosSelIndexes.length; i++) {
+                turnosSelIndexesInt[i] = turnosSelIndexes[i];
+            }
+
+            turnosLista.setSelectedIndices(turnosSelIndexesInt);
+        } else
+            turnosLista.setSelectedIndices(null);
+    }
+
+    public Integer[] getTurnosSelIndexes() {
+        if (turnosSelIndexes == null) {
+            OperationBinding operation = this.getBindings().getOperationBinding("getIndicesTurnos");
+            turnosSelIndexes = (Integer[])operation.execute();
+        }
+        
+        return turnosSelIndexes;
+    }
+    
+    public Boolean getVerMensual() {
+        return this.cbVerMensual.isSelected();
+    }
+
+    public void setCbVerMensual(RichSelectBooleanCheckbox cbVerMensual) {
+        this.cbVerMensual = cbVerMensual;
+    }
+
+    public RichSelectBooleanCheckbox getCbVerMensual() {
+        return cbVerMensual;
+    }
+
+    public void setGraphModel(oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel graphModel) {
+        this.graphModel = graphModel;
+    }
+
+    public oracle.adfinternal.view.faces.dvt.model.binding.graph.ActiveGraphDataModel getGraphModel() {
+        return graphModel;
+    }
+    
+    public void setRomperPorTurno(Boolean romperPorTurno) {
+        this.romperPorTurno = romperPorTurno;
+    }
+
+    public Boolean getRomperPorTurno() {
+        return romperPorTurno;
     }
 }
